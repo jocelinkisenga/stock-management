@@ -1,0 +1,49 @@
+<div>
+    <!-- Edit Modal -->
+    <x-modal wire:model="editModal" name="editModal">
+        <x-slot name="title">
+            {{ __('Edit Category') }} {{ $category?->name }}
+        </x-slot>
+
+        <x-slot name="content">
+            <!-- Validation Errors -->
+            <x-validation-errors class="mb-4" :errors="$errors" />
+            <form wire:submit="update">
+                <div class="mb-6">
+                    <div class="mt-4 w-full">
+                        <x-label for="code" :value="__('Code')" />
+                        <x-input id="code" class="block mt-1 w-full" type="text" name="code" disabled
+                            wire:model="form.code" />
+                        <x-input-error :messages="$errors->get('form.code')" for="form.code" class="mt-2" />
+                    </div>
+                    <div class="my-4 p w-full">
+                        <x-label for="name" :value="__('Name')" />
+                        <x-input id="name" class="block mt-1 w-full" type="text" name="name"
+                            wire:model="form.name" />
+                        <x-input-error :messages="$errors->get('form.name')" for="form.name" class="mt-2" />
+                    </div>
+                    <div class="my-4">
+                        <x-label for="description" :value="__('Description')" />
+                        <x-input id="description" class="block mt-1 w-full" type="text" name="description"
+                            wire:model="form.description" />
+                        <x-input-error :messages="$errors->get('form.description')" for="form.description" class="mt-2" />
+                    </div>
+
+                    <div class="w-full px-3 mb-4">
+                        <x-label for="image" :value="__('Image')" />
+                        <x-media-upload title="{{ __('Image') }}" name="form.image" wire:model="form.image" :file="$form->image"
+                            :preview="$form->image && is_string($form->image) ? asset('images/categories/' . $form->image) : null"
+                            single types="PNG / JPEG / WEBP" fileTypes="image/*" />
+                        <x-input-error :messages="$errors->get('form.image')" for="form.image" class="mt-2" />
+                    </div>
+                    <div class="w-full">
+                        <x-button primary type="submit" class="w-full text-center" wire:loading.attr="disabled">
+                            {{ __('Update') }}
+                        </x-button>
+                    </div>
+                </div>
+            </form>
+        </x-slot>
+    </x-modal>
+    <!-- End Edit Modal -->
+</div>

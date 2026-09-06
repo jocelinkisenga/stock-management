@@ -1,0 +1,216 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Enums\PurchaseReturnStatus;
+use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
+
+class PurchaseReturn extends Model
+{
+    use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
+    public const ATTRIBUTES = [
+        'id',
+        'date',
+        'reference',
+        'supplier_id',
+        'tax_percentage',
+        'tax_amount',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
+        'status',
+        'payment_id',
+        'supplier_id',
+    ];
+
+    public array $orderable = self::ATTRIBUTES;
+
+    public array $filterable = self::ATTRIBUTES;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'date',
+        'reference',
+        'supplier_id',
+        'user_id',
+        'warehouse_id',
+        'tax_percentage',
+        'tax_amount',
+        'discount_percentage',
+        'discount_amount',
+        'shipping_amount',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
+        'status',
+        'payment_id',
+        'note',
+        'supplier_id',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+            'status' => PurchaseReturnStatus::class,
+            'payment_status' => \App\Enums\PaymentStatus::class,
+        ];
+    }
+
+    /** @return HasMany<PurchaseReturnDetail, $this> */
+    public function purchaseReturnDetails(): HasMany
+    {
+        return $this->hasMany(PurchaseReturnDetail::class, 'purchase_return_id', 'id');
+    }
+
+    public function syncTotals(): void
+    {
+        $details = $this->purchaseReturnDetails;
+        $payments = $this->purchaseReturnPayments;
+
+        $subTotal = $details->sum(fn ($detail) => $detail->getRawOriginal('sub_total'));
+        $taxAmount = ($subTotal * $this->tax_percentage) / 100;
+        $discountAmount = ($subTotal * $this->discount_percentage) / 100;
+        $shippingAmount = $this->getRawOriginal('shipping_amount');
+
+        $totalAmount = $subTotal + $taxAmount - $discountAmount + $shippingAmount;
+        $paidAmount = $payments->sum(fn ($payment) => $payment->getRawOriginal('amount'));
+        $dueAmount = $totalAmount - $paidAmount;
+
+        $this->updateQuietly([
+            'tax_amount' => $taxAmount,
+            'discount_amount' => $discountAmount,
+            'total_amount' => $totalAmount,
+            'paid_amount' => $paidAmount,
+            'due_amount' => $dueAmount,
+        ]);
+    }
+
+    /**
+     * @return HasMany<PurchaseReturnPayment, $this>
+     */
+    public function purchaseReturnPayments(): HasMany
+    {
+        return $this->hasMany(PurchaseReturnPayment::class, 'purchase_return_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo<Supplier, $this>
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(
+            related: Supplier::class,
+            foreignKey: 'supplier_id',
+        );
+    }
+
+    /**
+     * @return BelongsTo<CashRegister, $this>
+     */
+    public function cashRegister(): BelongsTo
+    {
+        return $this->belongsTo(CashRegister::class, 'cash_register_id', 'id');
+    }
+
+    #[Override]
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($purchaseReturn): void {
+            $prefix = settings('purchaseReturn_prefix', 'PRR');
+            $purchaseReturn->reference = make_reference_id($prefix, self::class);
+        });
+    }
+
+    /**
+     * @return mixed
+     */
+    #[\Illuminate\Database\Eloquent\Attributes\Scope]
+    protected function completed(mixed $query)
+    {
+        return $query->whereStatus(2);
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return int|float
+     */
+    protected function discountAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): int|float => $value / 100,
+        );
+    }
+
+    /**
+     * get shipping amount
+     */
+    protected function shippingAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): int|float => $value / 100,
+        );
+    }
+
+    /**
+     * get paid amount
+     */
+    protected function paidAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): int|float => $value / 100,
+        );
+    }
+
+    /**
+     * get total amount
+     */
+    protected function totalAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): int|float => $value / 100,
+        );
+    }
+
+    /**
+     * get due amount
+     */
+    protected function dueAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): int|float => $value / 100,
+        );
+    }
+
+    protected function taxAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): int|float => $value / 100,
+        );
+    }
+}

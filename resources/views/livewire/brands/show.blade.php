@@ -1,0 +1,54 @@
+<div>
+    <x-modal wire:model="showModal" name="showModal">
+        <x-slot name="title">
+            {{ __('Show Brand') }} - {{ $brand?->name }}
+        </x-slot>
+
+        <x-slot name="content">
+            <div class="px-4 mx-auto mb-4">
+                <div class="w-full mb-3">
+                    <div class="flex justify-center px-3">
+                        @if($brand?->image)
+                            <img src="{{ asset('images/brands/' . $brand->image) }}" alt="{{ $brand->name }}"
+                                class="w-32 h-32 rounded-full object-cover shadow-sm">
+                        @else
+                            <div class="w-32 h-32 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center shadow-sm">
+                                <i class="fas fa-tag text-blue-600 dark:text-blue-400 text-3xl"></i>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="flex flex-row">
+                    <div class="w-full px-4">
+                        <x-table>
+                            <x-table.tr>
+                                <x-table.th>
+                                    {{ __('Name') }}
+                                </x-table.th>
+                                <x-table.td>
+                                    {{ $brand?->name }}
+                                </x-table.td>
+                            </x-table.tr>
+                            <x-table.tr>
+                                <x-table.th>
+                                    {{ __('Origin') }}
+                                </x-table.th>
+                                <x-table.td>
+                                    {{ $brand?->origin }}
+                                </x-table.td>
+                            </x-table.tr>
+                            <x-table.tr>
+                                <x-table.th>
+                                    {{ __('Description') }}
+                                </x-table.th>
+                                <x-table.td>
+                                    {!! $brand?->description !!}
+                                </x-table.td>
+                            </x-table.tr>
+                        </x-table>
+                    </div>
+                </div>
+            </div>
+        </x-slot>
+    </x-modal>
+</div>

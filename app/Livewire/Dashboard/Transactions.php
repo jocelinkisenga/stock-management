@@ -1,0 +1,480 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire\Dashboard;
+
+use App\Models\Expense;
+use App\Models\Purchase;
+use App\Models\PurchasePayment;
+use App\Models\PurchaseReturnPayment;
+use App\Models\Sale;
+use App\Models\SaleDetails;
+use App\Models\SalePayment;
+use App\Models\SaleReturnPayment;
+use App\Traits\WithAlert;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
+use Livewire\Component;
+
+class Transactions extends Component
+{
+    use WithAlert;
+
+    public string $typeChart = 'monthly';
+
+    public string $charts = '';
+
+    public string $startDate = '';
+
+    public string $endDate = '';
+
+    public function mount(): void
+    {
+        $this->startDate = Date::now()->startOfMonth()->toDateString();
+        $this->endDate = Date::now()->endOfMonth()->toDateString();
+
+        $this->chart();
+    }
+
+    #[Computed]
+    public function lastSales(): Collection
+    {
+        return Sale::with('customer')
+            ->latest()
+            ->take(5)
+            ->get(['id', 'reference', 'total_amount', 'status', 'customer_id', 'user_id', 'date']);
+    }
+
+    #[Computed]
+    public function lastPurchases(): Collection
+    {
+        return Purchase::with('supplier')
+            ->latest()
+            ->take(5)
+            ->get(['id', 'reference', 'total_amount', 'status', 'supplier_id', 'date', 'user_id']);
+    }
+
+    #[Computed]
+    public function bestSales(): Collection
+    {
+        return Sale::query()
+            ->select('sales.*', 'customers.name')
+            ->join('customers', 'sales.customer_id', '=', 'customers.id')
+            ->with('user', 'customer')
+            ->whereMonth('sales.created_at', Date::now()->startOfMonth())
+            ->orderBy('sales.total_amount', 'desc')
+            ->take(5)
+            ->get();
+    }
+
+    #[Computed]
+    public function purchasesCount(): Collection
+    {
+        return Purchase::query()->where('date', '>=', Date::now()->subWeek())
+            ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as purchases'))
+            ->groupBy('date')
+            ->pluck('purchases');
+    }
+
+    #[Computed]
+    public function salesCount(): Collection
+    {
+        return Sale::query()->whereDate('date', '>=', Date::now()->subWeek())
+            ->select(DB::raw('DATE(date) as date'), DB::raw('count(*) as sales'))
+            ->groupBy('date')
+            ->pluck('sales');
+    }
+
+    public function chart(): void
+    {
+        $monthRaw = db_date_format('date', '%m');
+        $yearRaw = db_date_format('date', '%Y');
+
+        $query = Sale::query()->selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
+            ->when(
+                $this->typeChart === 'monthly',
+                static fn ($q) => $q->selectRaw($monthRaw . ' as labels, COUNT(*) as sales')
+                    ->whereYear('date', '=', date('Y'))
+                    ->groupByRaw('labels'),
+                static fn ($q) => $q->selectRaw($yearRaw . ' as labels, COUNT(*) as sales')
+                    ->groupByRaw('labels')
+            )
+            ->get()
+            ->toArray();
+
+        $sales = [
+            'total' => array_column($query, 'total'),
+            'due_amount' => array_map(static fn ($total, $dueAmount): int|float => $total - $dueAmount, array_column($query, 'total'), array_column($query, 'due_amount')),
+            'labels' => array_column($query, 'labels'),
+        ];
+
+        $query = Purchase::query()->selectRaw('SUM(total_amount) as total, SUM(due_amount) as due_amount')
+            ->when(
+                $this->typeChart === 'monthly',
+                static fn ($q) => $q->selectRaw($monthRaw . ' as labels, COUNT(*) as purchases')
+                    ->whereYear('date', '=', date('Y'))
+                    ->groupByRaw('labels'),
+                static fn ($q) => $q->selectRaw($yearRaw . ' as labels, COUNT(*) as purchases')
+                    ->groupByRaw('labels')
+            )
+            ->get()
+            ->toArray();
+
+        $purchases = [
+            'total' => array_column($query, 'total'),
+            'due_amount' => array_map(static fn ($total, $dueAmount): int|float => $total - $dueAmount, array_column($query, 'total'), array_column($query, 'due_amount')),
+            'labels' => array_column($query, 'labels'),
+        ];
+
+        $this->charts = json_encode([
+            'total' => [
+                'sales' => $sales['total'],
+                'purchase' => $purchases['total'],
+            ],
+            'due_amount' => [
+                'sales' => $sales['due_amount'],
+                'purchase' => $purchases['due_amount'],
+            ],
+            'labels' => $sales['labels'],
+        ], JSON_THROW_ON_ERROR);
+    }
+
+    protected function getChart(mixed $sales, mixed $purchases): string
+    {
+        $dataarray = [];
+        $i = 0;
+
+        foreach ($sales as $sale) {
+            $dataarray['total']['sales'][$i] = $sale['total'];
+            $dataarray['due_amount']['sales'][$i] = $sale['total'] - $sale['due_amount'];
+            $dataarray['labels'][$i] = $sale['labels'];
+            $i++;
+        }
+
+        $i = 0;
+
+        foreach ($purchases as $purchase) {
+            $dataarray['total']['purchase'][$i] = $purchase['total'];
+            $dataarray['due_amount']['purchase'][$i] = $purchase['total'] - $purchase['due_amount'];
+            $i++;
+        }
+
+        return json_encode($dataarray, JSON_THROW_ON_ERROR);
+    }
+
+    #[Computed(persist: true, seconds: 7200)]
+    public function topProducts(): Collection
+    {
+        return SaleDetails::query()
+            ->selectRaw('
+                SUM(sale_details.quantity) as qtyItem,
+                products.name as name,
+                products.code as code,
+                SUM(sale_details.sub_total) as totalSalesAmount,
+                sale_details.id,
+                sales.warehouse_id
+            ')
+            ->join('products', 'products.id', '=', 'sale_details.product_id')
+            ->join('sales', 'sales.id', '=', 'sale_details.sale_id')
+            ->whereMonth('sale_details.created_at', Date::now()->startOfMonth())
+            ->groupBy(['sale_details.id', 'sale_details.product_id', 'products.name', 'products.code', 'sales.warehouse_id'])
+            ->orderByDesc('qtyItem')
+            ->limit(5)
+            ->get();
+    }
+
+    #[Computed(persist: true, seconds: 7200)]
+    public function topCustomers(): Collection
+    {
+        return Sale::query()
+            ->selectRaw('
+                SUM(sales.total_amount) as totalSalesAmount,
+                customers.name as name,
+                customers.id as id,
+                sales.id,
+                sales.warehouse_id,
+                warehouses.name as warehouse_name
+            ')
+            ->join('customers', 'customers.id', '=', 'sales.customer_id')
+            ->leftJoin('warehouses', 'warehouses.id', '=', 'sales.warehouse_id')
+            ->whereMonth('sales.created_at', Date::now()->startOfMonth())
+            ->groupBy(['sales.id', 'sales.customer_id', 'customers.name', 'customers.id', 'sales.warehouse_id', 'warehouses.name'])
+            ->orderByDesc('totalSalesAmount')
+            ->limit(5)
+            ->get();
+    }
+
+    #[Computed(persist: true, seconds: 7200)]
+    public function monthlyChartOptions(): array
+    {
+        $startDate = Date::now()->startOfMonth();
+        $endDate = Date::now()->endOfMonth();
+
+        $customerNameTotal = DB::table('sale_payments')
+            ->join('sales', 'sale_payments.sale_id', '=', 'sales.id')
+            ->join('customers', 'sales.customer_id', '=', 'customers.id')
+            ->whereBetween('sale_payments.created_at', [$startDate, $endDate])
+            ->groupBy('customers.name')
+            ->select(DB::raw('SUM(sale_payments.amount) / 100 as sale_total_payment'), 'customers.name as customer_name')
+            ->get();
+
+        $supplierNameTotal = DB::table('purchase_payments')
+            ->join('purchases', 'purchase_payments.purchase_id', '=', 'purchases.id')
+            ->join('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+            ->whereBetween('purchase_payments.created_at', [$startDate, $endDate])
+            ->groupBy('suppliers.name')
+            ->select(DB::raw('SUM(purchase_payments.amount) / 100 as purchase_total_payment'), 'suppliers.name as supplier_name')
+            ->get();
+
+        $customerSeries = $customerNameTotal->pluck('sale_total_payment')->toArray();
+        $customerLabels = $customerNameTotal->pluck('customer_name')->toArray();
+
+        $supplierSeries = $supplierNameTotal->pluck('purchase_total_payment')->toArray();
+        $supplierLabels = $supplierNameTotal->pluck('supplier_name')->toArray();
+
+        return [
+            'chart' => [
+                'type' => 'bar',
+                'width' => '100%',
+            ],
+            'plotOptions' => [
+                'bar' => [
+                    'horizontal' => true,
+                    'borderRadius' => 4,
+                ],
+            ],
+            'series' => [
+                [
+                    'name' => __('Customer Payments'),
+                    'data' => $customerSeries,
+                ],
+                [
+                    'name' => __('Supplier Payments'),
+                    'data' => $supplierSeries,
+                ],
+            ],
+            'xaxis' => [
+                'categories' => array_merge($customerLabels, $supplierLabels),
+            ],
+            'yaxis' => [
+                'title' => [
+                    'text' => __('Customers/Suppliers'),
+                ],
+            ],
+            'legend' => [
+                'position' => 'top',
+                'horizontalAlign' => 'center',
+                'offsetX' => 40,
+            ],
+        ];
+    }
+
+    #[Computed(persist: true, seconds: 7200)]
+    public function dailyChartOptions(): array
+    {
+        $currentMonth = Date::now()->startOfMonth();
+
+        $daysInMonth = [];
+        $currentDay = Date::now()->startOfMonth();
+
+        while ($currentDay->month === $currentMonth->month) {
+            $daysInMonth[] = $currentDay->format('Y-m-d');
+            $currentDay->addDay();
+        }
+
+        $salesData = Sale::query()->selectRaw('DATE(date) as day, SUM(total_amount) as total_sales')
+            ->whereBetween('date', [$currentMonth, Date::now()->endOfMonth()])
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->get();
+
+        $purchasesData = Purchase::query()->selectRaw('DATE(date) as day, SUM(total_amount) as total_purchases')
+            ->whereBetween('date', [$currentMonth, Date::now()->endOfMonth()])
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->get();
+
+        $chartData = [];
+
+        foreach ($daysInMonth as $dayInMonth) {
+            $sale = $salesData->where('day', $dayInMonth)->first();
+            $purchase = $purchasesData->where('day', $dayInMonth)->first();
+            $chartData[] = [
+                'day' => $dayInMonth,
+                'sales' => ($sale) ? $sale->total_sales : 0,
+                'purchases' => ($purchase) ? $purchase->total_purchases : 0,
+            ];
+        }
+
+        return [
+            'chart' => [
+                'type' => 'bar',
+                'stacked' => true,
+                'width' => '100%',
+            ],
+            'plotOptions' => [
+                'bar' => [
+                    'horizontal' => false,
+                    'endingShape' => 'flat',
+                    'columnWidth' => '70%',
+                ],
+            ],
+            'series' => [
+                [
+                    'name' => __('Sales'),
+                    'data' => array_column($chartData, 'sales'),
+                ],
+                [
+                    'name' => __('Purchases'),
+                    'data' => array_column($chartData, 'purchases'),
+                ],
+            ],
+            'xaxis' => [
+                'categories' => array_column($chartData, 'day'),
+                'labels' => [
+                    'rotateAlways' => true,
+                    'rotate' => -45,
+                ],
+            ],
+            'yaxis' => [
+                'title' => [
+                    'text' => __('Amount'),
+                ],
+            ],
+            'legend' => [
+                'position' => 'top',
+                'horizontalAlign' => 'center',
+                'offsetX' => 40,
+            ],
+            'colors' => ['#4CAF50', '#F44336'],
+        ];
+    }
+
+    #[Computed(persist: true, seconds: 7200)]
+    public function paymentChart(): array
+    {
+        $dates = collect();
+        $dateLabels = [];
+        $paymentSentData = [];
+        $paymentReceivedData = [];
+
+        foreach (range(-11, 0) as $i) {
+            $date = Date::now()->addMonths($i);
+            $dateLabels[] = $date->format('M Y');
+            $dates->put($date->format('Y-m'), 0);
+        }
+
+        $date_range = Date::today()->subYear()->format('Y-m-d');
+
+        $monthRaw = db_date_format('date', '%Y-%m');
+
+        $sale_payments = SalePayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $sale_return_payments = SaleReturnPayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $purchase_payments = PurchasePayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $purchase_return_payments = PurchaseReturnPayment::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $expenses = Expense::query()->where('date', '>=', $date_range)
+            ->selectRaw($monthRaw . ' as month, SUM(amount) as amount')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        foreach ($dateLabels as $dateLabel) {
+            $month = Date::createFromFormat('M Y', $dateLabel);
+            $monthKey = $month->format('Y-m');
+
+            $paymentSentData[] = ($purchase_payments->where('month', $monthKey)->first()->amount ?? 0)
+                + ($sale_return_payments->where('month', $monthKey)->first()->amount ?? 0)
+                + ($expenses->where('month', $monthKey)->first()->amount ?? 0);
+
+            $paymentReceivedData[] = ($sale_payments->where('month', $monthKey)->first()->amount ?? 0)
+                + ($purchase_return_payments->where('month', $monthKey)->first()->amount ?? 0);
+
+            $dates[$monthKey] = 1;
+        }
+
+        foreach ($dates as $month => $value) {
+            if ($value === 0) {
+                $dateLabels[] = Date::createFromFormat('Y-m', $month)->format('M Y');
+                $paymentSentData[] = 0;
+                $paymentReceivedData[] = 0;
+            }
+        }
+
+        return [
+            'chart' => [
+                'type' => 'bar',
+                'width' => '100%',
+            ],
+            'plotOptions' => [
+                'bar' => [
+                    'horizontal' => false,
+                    'endingShape' => 'flat',
+                    'columnWidth' => '70%',
+                ],
+            ],
+            'series' => [
+                [
+                    'name' => __('Payment Sent'),
+                    'data' => $paymentSentData,
+                ],
+                [
+                    'name' => __('Payment Received'),
+                    'data' => $paymentReceivedData,
+                ],
+            ],
+            'xaxis' => [
+                'categories' => $dateLabels,
+                'labels' => [
+                    'rotateAlways' => true,
+                    'rotate' => -45,
+                ],
+            ],
+            'yaxis' => [
+                'title' => [
+                    'text' => __('Amount'),
+                ],
+            ],
+            'legend' => [
+                'position' => 'top',
+                'horizontalAlign' => 'center',
+                'offsetX' => 40,
+            ],
+            'colors' => ['#F44336', '#4CAF50'],
+        ];
+    }
+
+    public function placeholder(): View|Factory
+    {
+        return view('livewire.placeholders.skeleton');
+    }
+
+    public function render(): View|Factory
+    {
+        return view('livewire.dashboard.transactions');
+    }
+}

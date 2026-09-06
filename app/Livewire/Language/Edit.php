@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire\Language;
+
+use App\Models\Language;
+use App\Traits\WithAlert;
+use Illuminate\Support\Facades\File;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
+
+class Edit extends Component
+{
+    use WithAlert;
+
+    public array $languages = [];
+
+    public mixed $language;
+
+    #[Validate('required', message: 'The code field is required')]
+    public mixed $name;
+
+    #[Validate('required', message: 'The code field is required')]
+    public mixed $code;
+
+    public bool $editModal = false;
+
+    #[On('editModal')]
+    public function openEditModal(mixed $id): void
+    {
+        $this->language = Language::query()->findOrFail($id);
+
+        $this->name = $this->language->name;
+
+        $this->code = $this->language->code;
+
+        $this->editModal = true;
+    }
+
+    public function update(): void
+    {
+        $this->validate();
+
+        $this->language->update([
+            'name' => $this->name,
+            'code' => $this->code,
+        ]);
+
+        File::copy(lang_path('en.json'), lang_path($this->code . '.json'));
+
+        $this->alert('success', __('Data created successfully!'));
+
+        $this->dispatch('refreshIndex')->to(Index::class);
+
+        $this->editModal = false;
+    }
+
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    {
+        return view('livewire.language.edit');
+    }
+}

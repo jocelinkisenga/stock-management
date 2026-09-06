@@ -1,0 +1,138 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire\Suppliers;
+
+use App\Exports\SupplierExport;
+use App\Imports\SupplierImport;
+use App\Livewire\Utils\Datatable;
+use App\Models\Supplier;
+use App\Traits\WithAlert;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Async;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+#[Layout('layouts.app')]
+
+class Index extends Component
+{
+    use Datatable;
+    use WithAlert;
+    use WithFileUploads;
+
+    public mixed $supplier = null;
+
+    public mixed $file = null;
+
+    public string $model = Supplier::class;
+
+    public bool $importModal = false;
+
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        $query = Supplier::query()->advancedFilter([
+            's' => $this->search ?: null,
+            'order_column' => $this->sortBy,
+            'order_direction' => $this->sortDirection,
+        ]);
+
+        $lengthAwarePaginator = $query->paginate($this->perPage);
+
+        return view('livewire.suppliers.index', ['suppliers' => $lengthAwarePaginator]);
+    }
+
+    public function delete(Supplier $supplier): void
+    {
+        abort_if(Gate::denies('supplier_delete'), 403);
+
+        $supplier->delete();
+
+        $this->alert('warning', __('Supplier Deleted Successfully'));
+    }
+
+    public function deleteSelected(): void
+    {
+        abort_if(Gate::denies('supplier_delete'), 403);
+
+        Supplier::query()->whereIn('id', $this->selected)->delete();
+
+        $this->selected = [];
+    }
+
+    #[On('importModal')]
+    public function importModal(): void
+    {
+        abort_if(Gate::denies('supplier_import'), 403);
+
+        $this->importModal = true;
+    }
+
+    public function downloadSample(): StreamedResponse|Response
+    {
+        return Storage::disk('exports')->download('suppliers_import_sample.xls');
+    }
+
+    public function import(): void
+    {
+        abort_if(Gate::denies('supplier import'), 403);
+
+        $this->validate([
+            'file' => 'required|mimes:xlsx,xls,csv,txt',
+        ]);
+
+        Supplier::import(new SupplierImport, $this->file);
+
+        $this->alert('success', __('Supplier Imported Successfully'));
+
+        $this->importModal = false;
+    }
+
+    #[Async]
+    public function downloadSelected(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        $suppliers = Supplier::query()->whereIn('id', $this->selected)->get();
+
+        return (new SupplierExport($suppliers))->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    #[On('downloadAll')]
+    public function downloadAll(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        return $this->callExport()->download('suppliers.xls', \Maatwebsite\Excel\Excel::XLS);
+    }
+
+    public function exportSelected(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        // $suppliers = Supplier::whereIn('id', $this->selected)->get();
+
+        return $this->callExport()->forModels($this->selected)->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    #[On('exportAll')]
+    public function exportAll(): StreamedResponse|Response
+    {
+        abort_if(Gate::denies('supplier_access'), 403);
+
+        return $this->callExport()->download('suppliers.pdf', \Maatwebsite\Excel\Excel::MPDF);
+    }
+
+    private function callExport(): SupplierExport
+    {
+        return new SupplierExport;
+    }
+}

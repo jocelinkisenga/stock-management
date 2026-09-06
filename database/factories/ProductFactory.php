@@ -1,0 +1,99 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Database\Factories;
+
+use App\Models\Product;
+use App\Models\ProductWarehouse;
+use App\Models\Warehouse;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ */
+class ProductFactory extends Factory
+{
+    protected $model = Product::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        $name = fake()->unique()->words(nb: 3, asText: true);
+
+        return [
+            'id' => Str::uuid(),
+            'name' => $name,
+            'code' => Str::random(5),
+            'category_id' => 1,
+            'brand_id' => null,
+            'slug' => Str::slug($name) . '-' . Str::uuid()->toString(),
+            'unit' => 'pcs',
+            'description' => fake()->sentence(),
+            'image' => null, // uploadImage('images/products', '1000', '1000'),
+            'gallery' => null,
+            'barcode_symbology' => 'C39',
+            'tax_amount' => 0,
+            'tax_type' => 0,
+            'featured' => true,
+            'best' => true,
+            'hot' => true,
+            'status' => true,
+            'embeded_video' => null,
+            'options' => null,
+            'usage' => null,
+        ];
+    }
+
+    /**
+     * Indicate that the product is featured.
+     *
+     * @return Factory<Product>
+     */
+    public function featured(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'featured' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the product is inactive.
+     *
+     * @return Factory<Product>
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => false,
+        ]);
+    }
+
+    #[\Override]
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Product $product): void {
+            $warehouses = Warehouse::query()->inRandomOrder()->limit(1)->get();
+
+            foreach ($warehouses as $warehouse) {
+                ProductWarehouse::query()->create([
+                    'product_id' => $product->id,
+                    'warehouse_id' => $warehouse->id,
+                    'qty' => 20,
+                    'cost' => 2.50,
+                    'price' => 10.00,
+                    'old_price' => 5.00,
+                    'is_ecommerce' => true,
+                    'stock_alert' => 10,
+                    'is_discount' => true,
+                    'discount_date' => now(),
+                ]);
+            }
+        });
+    }
+}

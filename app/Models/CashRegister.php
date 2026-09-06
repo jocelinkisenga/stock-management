@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Support\HasAdvancedFilter;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+/**
+ * @property int                             $id
+ * @property string                          $user_id
+ * @property int|null                        $warehouse_id
+ * @property numeric                         $cash_in_hand
+ * @property numeric|null                    $recieved
+ * @property numeric|null                    $sent
+ * @property int                             $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read User $user
+ * @property-read Warehouse|null $warehouse
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister advancedFilter($data)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister status($status)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister user($userId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereCashInHand($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereRecieved($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereSent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CashRegister whereWarehouseId($value)
+ *
+ * @mixin \Illuminate\Database\Eloquent\Model
+ */
+class CashRegister extends Model
+{
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use HasAdvancedFilter;
+
+    /** @var array<int, string> */
+    public const ATTRIBUTES = [
+        'id', 'cash_in_hand', 'user_id', 'warehouse_id', 'status', 'recieved', 'sent',
+    ];
+
+    public array $orderable = self::ATTRIBUTES;
+
+    public array $filterable = self::ATTRIBUTES;
+
+    /** @var array<int, string> */
+    protected $fillable = [
+        'cash_in_hand', 'user_id', 'warehouse_id', 'status', 'recieved', 'sent',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     */
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    /**
+     * Get the recieved amount.
+     */
+    protected function recieved(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value,
+            set: fn ($value) => $value,
+        );
+    }
+
+    /**
+     * Get the sent amount.
+     */
+    protected function sent(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value,
+            set: fn ($value) => $value,
+        );
+    }
+
+    /**
+     * Scope a query to only include cash registers with a specific status.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param bool                                  $status
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function scopeStatus(mixed $query, mixed $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    /**
+     * Scope a query to only include cash registers with a specific user.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string                                $userId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function scopeUser(mixed $query, mixed $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+}

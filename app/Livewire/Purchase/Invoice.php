@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire\Purchase;
+
+use App\Models\Purchase;
+use App\Traits\WithAlert;
+// use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+#[Layout('layouts.template')]
+class Invoice extends Component
+{
+    use WithAlert;
+
+    public mixed $data;
+
+    public $entity = 'Supplier';
+
+    public function mount(int|string $id): void
+    {
+        $this->data = Purchase::query()->findOrFail($id);
+    }
+
+    public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    {
+        // abort_if(Gate::denies('purchase_show'), 403);
+
+        return view('invoice.' . settings()->invoice_template);
+    }
+}

@@ -1,0 +1,95 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreExpenseRequest;
+use App\Http\Requests\UpdateExpenseRequest;
+use App\Http\Resources\ExpenseResource;
+use App\Models\Expense;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
+
+class ExpenseController extends Controller
+{
+    use SafeApiQuery;
+
+    /**
+     * Retrieve a list of expenses with optional filters and pagination.
+     */
+    public function index(Request $request): AnonymousResourceCollection
+    {
+        $query = Expense::query();
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->integer('category_id'));
+        }
+
+        if ($request->get('_end') !== null) {
+            $limit = (int) ($request->input('_end') ?? 10);
+            $offset = (int) ($request->input('_start') ?? 0);
+            $order = $this->safeOrderDirection($request);
+            $sort = $this->safeSortColumn($request, ['id', 'category_id', 'amount', 'date', 'created_at', 'updated_at']);
+
+            $expenses = $query
+                ->orderBy($sort, $order)
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+        } else {
+            $expenses = $query->get();
+        }
+
+        return ExpenseResource::collection($expenses);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreExpenseRequest $storeExpenseRequest): ExpenseResource
+    {
+        $expense = Expense::query()->create($storeExpenseRequest->validated());
+
+        return new ExpenseResource($expense);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id): ExpenseResource|JsonResponse
+    {
+        $expense = Expense::query()->find($id);
+
+        if ($expense === null) {
+            return new \Illuminate\Http\JsonResponse(['message' => 'Expense not found'], 404);
+        }
+
+        return new ExpenseResource($expense);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateExpenseRequest $updateExpenseRequest, int $id): ExpenseResource
+    {
+        $expense = Expense::query()->findOrFail($id);
+        $expense->update($updateExpenseRequest->validated());
+
+        return new ExpenseResource($expense);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $expense = Expense::query()->findOrFail($id);
+        $expense->delete();
+
+        return new \Illuminate\Http\JsonResponse(['message' => 'Expense deleted successfully']);
+    }
+}

@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Livewire\Email;
+
+use App\Models\EmailTemplate;
+use App\Traits\WithAlert;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+
+class Edit extends Component
+{
+    use WithAlert;
+    use WithFileUploads;
+
+    public bool $openModal = false;
+
+    #[Validate([
+        'email_setting.name' => ['required', 'max:255'],
+        'email_setting.default' => ['required'],
+        'email_setting.placeholders' => ['required'],
+        'email_setting.type' => ['required'],
+        'email_setting.subject' => ['required'],
+    ])]
+    public EmailTemplate $email_setting;
+
+    #[Validate('required')]
+    public ?string $description = null;
+
+    #[Validate('required')]
+    public ?string $message = null;
+
+    public function updatedMessage(?string $value): void
+    {
+        $this->message = $value;
+    }
+
+    public function render(): View|Factory
+    {
+        abort_if(Gate::denies('email update'), 403);
+
+        return view('livewire.email.edit');
+    }
+
+    #[On('editModal')]
+    public function editModal(mixed $id): void
+    {
+        $this->resetErrorBag();
+        $this->resetValidation();
+        $this->email_setting = EmailTemplate::whereId($id)->firstOrFail();
+        $this->description = $this->email_setting->description;
+        $this->message = $this->email_setting->message;
+        $this->openModal = true;
+    }
+
+    public function update(): void
+    {
+        $this->validate();
+
+        $this->email_setting->update($this->all());
+
+        $this->alert('success', __('Email template created successfully.'));
+
+        $this->openModal = false;
+    }
+}
