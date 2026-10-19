@@ -27,7 +27,7 @@ class SalePaymentObserver
             if (in_array('whatsapp', $activeChannels) && ! empty($payment->sale->customer->phone)) {
                 // Notification::route('whatsapp', $payment->sale->customer->phone)
                 //     ->notify(new PaymentSaleNotification($payment, 'whatsapp'));
-                Log::info('sent successifully', ["to" => "okay", 'message' => "recu"]);
+                Log::info('sent successifully', ['to' => 'okay', 'message' => 'recu']);
             }
         }
     }
