@@ -46,7 +46,6 @@ return new class extends Migration
         //         'created_at' => now(),
         // ]);
 
-
         Schema::create('password_reset_tokens', function (Blueprint $blueprint): void {
             $blueprint->string('email')->primary();
             $blueprint->string('token');
