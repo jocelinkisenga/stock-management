@@ -21,6 +21,6 @@ class SaleNotification extends BaseSystemNotification
     {
         return (new MailMessage)
             ->subject($this->subjectTitle)
-            ->markdown('emails.sale', ['sale' => $this->sale]);
+            ->markdown('emails.saleMail', ['sale' => $this->sale]);
     }
 }

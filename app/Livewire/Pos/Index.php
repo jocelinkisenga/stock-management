@@ -138,8 +138,8 @@ class Index extends Component
         $sale = resolve(StorePosSaleAction::class)(
             [
                 'date' => date('Y-m-d'),
-                'customer_id' => $this->form->customer_id,
-                'warehouse_id' => $this->form->warehouse_id,
+                'customer_id' => $this->form->customer_id ?: null,
+                'warehouse_id' => $this->form->warehouse_id ?: null,
                 'user_id' => $this->user_id,
                 'cash_register_id' => $this->cash_register_id,
                 'tax_percentage' => $this->form->tax_percentage,
