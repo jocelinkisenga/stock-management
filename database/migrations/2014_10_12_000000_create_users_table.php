@@ -33,18 +33,18 @@ return new class extends Migration
             $blueprint->rememberToken();
             $blueprint->timestamps();
         });
-        User::create([
-                'name' => 'Admin',
-                'email' => 'admin1@gmail.com',
-                'password' => bcrypt('password'),
-                'avatar' => 'avatar.png',
-                'phone' => '0123456789',
-                'role_id' => 1,
-                'status' => \App\Enums\Status::ACTIVE,
-                'is_all_warehouses' => true,
-                'remember_token' => null,
-                'created_at' => now(),
-        ]);
+        // User::create([
+        //         'name' => 'Admin',
+        //         'email' => 'admin1@gmail.com',
+        //         'password' => bcrypt('password'),
+        //         'avatar' => 'avatar.png',
+        //         'phone' => '0123456789',
+        //         'role_id' => 1,
+        //         'status' => \App\Enums\Status::ACTIVE,
+        //         'is_all_warehouses' => true,
+        //         'remember_token' => null,
+        //         'created_at' => now(),
+        // ]);
 
         Schema::create('password_reset_tokens', function (Blueprint $blueprint): void {
             $blueprint->string('email')->primary();
