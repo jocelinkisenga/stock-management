@@ -20,7 +20,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
-use Throwable;
 
 class Import extends Component
 {
@@ -64,7 +63,7 @@ class Import extends Component
             $filename = time() . '-product.' . $this->file->getClientOriginalExtension();
             $this->file->storeAs('products', $filename);
 
-            dispatch(new \App\Jobs\ImportJob($filename));
+            dispatch(new ImportJob($filename));
 
             $this->alert('success', __('Product imported successfully!'));
         } else {
@@ -131,6 +130,7 @@ class Import extends Component
 
             return null;
         }
+
         return null;
     }
 }

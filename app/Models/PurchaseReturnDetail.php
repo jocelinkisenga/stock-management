@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property int                             $id
@@ -51,9 +52,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PurchaseReturnDetail extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $guarded = [];
 
-    #[\Override]
+    #[Override]
     protected static function boot()
     {
         parent::boot();
@@ -68,7 +70,7 @@ class PurchaseReturnDetail extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -76,7 +78,7 @@ class PurchaseReturnDetail extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\PurchaseReturn, $this>
+     * @return BelongsTo<PurchaseReturn, $this>
      */
     public function purchaseReturn(): BelongsTo
     {

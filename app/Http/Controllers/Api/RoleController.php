@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
@@ -12,7 +13,6 @@ use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class RoleController extends Controller
 {
@@ -59,7 +59,7 @@ class RoleController extends Controller
         $role = Role::query()->find($id);
 
         if ($role === null) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'Role not found'], 404);
+            return new JsonResponse(['message' => 'Role not found'], 404);
         }
 
         return new RoleResource($role);
@@ -84,6 +84,6 @@ class RoleController extends Controller
         $role = Role::query()->findOrFail($id);
         $role->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'Role deleted successfully']);
+        return new JsonResponse(['message' => 'Role deleted successfully']);
     }
 }

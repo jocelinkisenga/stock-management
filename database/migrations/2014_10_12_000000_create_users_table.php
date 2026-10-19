@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -34,16 +33,16 @@ return new class extends Migration
             $blueprint->timestamps();
         });
         User::create([
-                'name' => 'Admin',
-                'email' => 'admin1@gmail.com',
-                'password' => bcrypt('password'),
-                'avatar' => 'avatar.png',
-                'phone' => '0123456789',
-                'role_id' => 1,
-                'status' => \App\Enums\Status::ACTIVE,
-                'is_all_warehouses' => true,
-                'remember_token' => null,
-                'created_at' => now(),
+            'name' => 'Admin',
+            'email' => 'admin1@gmail.com',
+            'password' => bcrypt('password'),
+            'avatar' => 'avatar.png',
+            'phone' => '0123456789',
+            'role_id' => 1,
+            'status' => App\Enums\Status::ACTIVE,
+            'is_all_warehouses' => true,
+            'remember_token' => null,
+            'created_at' => now(),
         ]);
 
         Schema::create('password_reset_tokens', function (Blueprint $blueprint): void {

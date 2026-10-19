@@ -13,9 +13,7 @@ class SelectList extends Component
      *
      * @param mixed $options
      */
-    public function __construct(public $options)
-    {
-    }
+    public function __construct(public $options) {}
 
     /**
      * Get the view / contents that represent the component.

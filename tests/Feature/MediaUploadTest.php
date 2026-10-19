@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Brands\Create;
-use App\Livewire\Brands\Edit;
 use App\Models\Brand;
-use Livewire\Livewire;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
 
 it('can upload a single file in brands create component', function () {
     Storage::fake('local_files');
@@ -22,7 +23,7 @@ it('can upload a single file in brands create component', function () {
     $brand = Brand::where('name', 'Test Brand')->first();
     expect($brand)->not->toBeNull();
     expect($brand->image)->not->toBeNull();
-    
+
     Storage::disk('local_files')->assertExists('brands/' . $brand->image);
 });
 

@@ -12,9 +12,6 @@ trait WithSorting
     /** @var mixed */
     public $sortDirection = 'desc';
 
-    /**
-     * @param mixed $field
-     */
     public function sortBy(mixed $field): void
     {
         $this->sortBy = $field;

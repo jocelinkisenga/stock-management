@@ -9,6 +9,7 @@ use App\Models\ProductWarehouse;
 use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Override;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -74,7 +75,7 @@ class ProductFactory extends Factory
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function configure(): static
     {
         return $this->afterCreating(function (Product $product): void {

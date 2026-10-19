@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWarehouseRequest;
 use App\Http\Requests\UpdateWarehouseRequest;
@@ -12,7 +13,6 @@ use App\Models\Warehouse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class WarehouseController extends Controller
 {
@@ -59,7 +59,7 @@ class WarehouseController extends Controller
         $warehouse = Warehouse::query()->find($id);
 
         if ($warehouse === null) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'Warehouse not found'], 404);
+            return new JsonResponse(['message' => 'Warehouse not found'], 404);
         }
 
         return new WarehouseResource($warehouse);
@@ -84,6 +84,6 @@ class WarehouseController extends Controller
         $warehouse = Warehouse::query()->findOrFail($id);
         $warehouse->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'Warehouse deleted successfully']);
+        return new JsonResponse(['message' => 'Warehouse deleted successfully']);
     }
 }

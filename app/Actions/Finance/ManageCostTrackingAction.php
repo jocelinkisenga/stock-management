@@ -51,14 +51,14 @@ class ManageCostTrackingAction
             ->get();
 
         $totalRevenue = $sales->sum('total_amount');
-        $totalCogs = $sales->sum(fn($sale) => $sale->items->sum(fn($item) => ($item->menuItem->cost_price ?? 0) * $item->quantity));
+        $totalCogs = $sales->sum(fn ($sale) => $sale->items->sum(fn ($item) => ($item->menuItem->cost_price ?? 0) * $item->quantity));
 
         // Calculate COGS by category
-        $cogsByCategory = $sales->flatMap(fn($sale) => $sale->items->map(fn($item) => [
+        $cogsByCategory = $sales->flatMap(fn ($sale) => $sale->items->map(fn ($item) => [
             'category' => $item->menuItem->category ?? 'uncategorized',
             'cost' => ($item->menuItem->cost_price ?? 0) * $item->quantity,
             'revenue' => $item->price * $item->quantity,
-        ]))->groupBy('category')->map(fn($items, $category) => [
+        ]))->groupBy('category')->map(fn ($items, $category) => [
             'category' => $category,
             'total_cost' => $items->sum('cost'),
             'total_revenue' => $items->sum('revenue'),
@@ -100,7 +100,7 @@ class ManageCostTrackingAction
         $wastagePercentage = $totalRevenue > 0 ? ($totalWastage / $totalRevenue) * 100 : 0;
 
         // Wastage by category/reason
-        $wastageByReason = $wastageExpenses->groupBy('subcategory')->map(fn($expenses, $reason) => [
+        $wastageByReason = $wastageExpenses->groupBy('subcategory')->map(fn ($expenses, $reason) => [
             'reason' => $reason ?: 'unspecified',
             'amount' => $expenses->sum('amount'),
             'count' => $expenses->count(),
@@ -136,7 +136,7 @@ class ManageCostTrackingAction
         $marketingPercentage = $totalRevenue > 0 ? ($totalMarketingSpend / $totalRevenue) * 100 : 0;
 
         // Marketing spend by channel
-        $marketingByChannel = $marketingExpenses->groupBy('subcategory')->map(fn($expenses, $channel) => [
+        $marketingByChannel = $marketingExpenses->groupBy('subcategory')->map(fn ($expenses, $channel) => [
             'channel' => $channel ?: 'general',
             'amount' => $expenses->sum('amount'),
             'percentage_of_marketing' => $totalMarketingSpend > 0

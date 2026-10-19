@@ -6,8 +6,8 @@ namespace Tests\Feature\Livewire\Products;
 
 use App\Livewire\Products\Index;
 use Livewire\Livewire;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class IndexTest extends TestCase
 {

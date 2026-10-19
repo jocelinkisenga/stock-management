@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Forms\AdjustmentForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Product;
@@ -16,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Throwable;

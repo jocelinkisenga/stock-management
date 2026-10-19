@@ -23,7 +23,7 @@ class Create extends Component
     #[Computed]
     public function permission_groups()
     {
-        return Permission::all()->groupBy(fn($permission) => explode('_', (string) $permission->name)[0]);
+        return Permission::all()->groupBy(fn ($permission) => explode('_', (string) $permission->name)[0]);
     }
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View

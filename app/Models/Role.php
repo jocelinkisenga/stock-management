@@ -34,8 +34,8 @@ use Spatie\Permission\Models\Role as SpatieRole;
  */
 class Role extends SpatieRole
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public const ATTRIBUTES = [
         'id',

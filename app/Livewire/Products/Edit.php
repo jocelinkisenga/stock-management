@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Forms\ProductForm;
 use App\Models\Brand;
 use App\Models\Category;
@@ -15,6 +13,7 @@ use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 

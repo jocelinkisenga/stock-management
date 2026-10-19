@@ -38,8 +38,8 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
  */
 class Permission extends SpatiePermission
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public const ATTRIBUTES = [
         'id',
@@ -61,7 +61,6 @@ class Permission extends SpatiePermission
     /**
      * Determine if the permission belongs to the role.
      *
-     * @param mixed $role
      *
      * @return bool
      */

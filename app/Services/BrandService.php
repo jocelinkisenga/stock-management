@@ -12,7 +12,7 @@ class BrandService
     public function create(array $data): Brand
     {
         if (isset($data['image']) && ! is_string($data['image']) && is_object($data['image']) && method_exists($data['image'], 'extension')) {
-            if (method_exists($data['image'], 'isValid') && !$data['image']->isValid()) {
+            if (method_exists($data['image'], 'isValid') && ! $data['image']->isValid()) {
                 unset($data['image']);
             } elseif ($data['image']->getRealPath()) {
                 $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
@@ -29,7 +29,7 @@ class BrandService
     public function update(Brand $brand, array $data): Brand
     {
         if (isset($data['image']) && ! is_string($data['image']) && is_object($data['image']) && method_exists($data['image'], 'extension')) {
-            if (method_exists($data['image'], 'isValid') && !$data['image']->isValid()) {
+            if (method_exists($data['image'], 'isValid') && ! $data['image']->isValid()) {
                 unset($data['image']);
             } elseif ($data['image']->getRealPath()) {
                 $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();

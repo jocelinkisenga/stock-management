@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 /**
  * @property int                             $id
@@ -72,7 +73,7 @@ class Cart extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -83,14 +84,14 @@ class Cart extends Model
     }
 
     /** Get the user that owns this cart
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this> */
+     * @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /** Get all items in this cart
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\CartItem, $this> */
+     * @return HasMany<CartItem, $this> */
     public function items(): HasMany
     {
         return $this->hasMany(CartItem::class);
@@ -195,10 +196,10 @@ class Cart extends Model
     protected function applyConditionsToAmount(float $amount, string $target): float
     {
         $conditions = $this->conditions ?? [];
-        $applicableConditions = array_filter($conditions, fn(array $condition) => ($condition['target'] ?? 'subtotal') === $target);
+        $applicableConditions = array_filter($conditions, fn (array $condition) => ($condition['target'] ?? 'subtotal') === $target);
 
         // Sort conditions by order
-        usort($applicableConditions, fn(array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
+        usort($applicableConditions, fn (array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
 
         foreach ($applicableConditions as $applicableCondition) {
             $amount = $this->applyCondition($amount, $applicableCondition);
@@ -254,7 +255,7 @@ class Cart extends Model
     public function removeCondition(string $name): self
     {
         $conditions = $this->conditions ?? [];
-        $this->conditions = array_filter($conditions, fn(array $condition) => ($condition['name'] ?? '') !== $name);
+        $this->conditions = array_filter($conditions, fn (array $condition) => ($condition['name'] ?? '') !== $name);
 
         return $this;
     }
@@ -270,7 +271,7 @@ class Cart extends Model
     {
         $conditions = $this->conditions ?? [];
 
-        return array_filter($conditions, fn(array $condition) => ($condition['type'] ?? '') === $type);
+        return array_filter($conditions, fn (array $condition) => ($condition['type'] ?? '') === $type);
     }
 
     /** Clear all conditions */

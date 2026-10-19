@@ -7,7 +7,6 @@ namespace App\Livewire\Analytics;
 use App\Actions\Analytics\GenerateRevenueReportAction;
 use App\Models\Category;
 use App\Models\Product;
-use Carbon\Carbon;
 use Exception;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;

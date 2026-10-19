@@ -14,8 +14,8 @@ use App\Models\Warehouse;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class SalesComponentTest extends TestCase
 {

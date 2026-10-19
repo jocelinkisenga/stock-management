@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Printer;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Utils\Datatable;
 use App\Models\Printer;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 

@@ -16,11 +16,11 @@ class SyncController extends Controller
     {
         $lastSyncedAt = $request->input('last_synced_at');
 
-        $query = (fn($model) => $lastSyncedAt
+        $query = (fn ($model) => $lastSyncedAt
             ? $model::where('updated_at', '>', $lastSyncedAt)->get()
             : $model::all());
 
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'products' => $query(Product::class),
             'customers' => $query(Customer::class),
             // Add other models here
@@ -31,6 +31,6 @@ class SyncController extends Controller
     public function push(Request $request): JsonResponse
     {
         // TODO: Handle incoming changes from desktop
-        return new \Illuminate\Http\JsonResponse(['message' => 'Push received']);
+        return new JsonResponse(['message' => 'Push received']);
     }
 }

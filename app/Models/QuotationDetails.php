@@ -50,10 +50,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class QuotationDetails extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $guarded = [];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -61,7 +62,7 @@ class QuotationDetails extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Quotation, $this>
+     * @return BelongsTo<Quotation, $this>
      */
     public function quotation(): BelongsTo
     {

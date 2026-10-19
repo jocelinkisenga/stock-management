@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Language;
 
-use Livewire\Attributes\Title;
-
 use App\Models\Language;
 use App\Traits\WithAlert;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;

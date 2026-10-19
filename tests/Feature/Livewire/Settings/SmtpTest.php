@@ -6,8 +6,8 @@ namespace Tests\Feature\Livewire\Settings;
 
 use App\Livewire\Settings\Smtp;
 use Livewire\Livewire;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class SmtpTest extends TestCase
 {

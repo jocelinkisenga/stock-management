@@ -15,6 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
+use Override;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -131,7 +132,7 @@ class User extends Authenticatable implements OAuthenticatable
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -148,13 +149,13 @@ class User extends Authenticatable implements OAuthenticatable
         return $builder->whereIsActive(true);
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
+    /** @return BelongsToMany<Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function assignedWarehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class);
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
+    /** @return BelongsToMany<Warehouse, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function warehouses(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class, 'user_warehouse', 'user_id', 'warehouse_id')

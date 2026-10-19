@@ -38,8 +38,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Printer extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public const ATTRIBUTES = [
         'id',

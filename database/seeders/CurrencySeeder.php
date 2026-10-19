@@ -25,7 +25,7 @@ class CurrencySeeder extends Seeder
                 'name' => 'Dollar',
                 'code' => Str::upper('USD'),
                 'locale' => 'en_US',
-            ]
+            ],
         ];
 
         foreach ($currencies as $currency) {

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Override;
 
 /**
  * @property int                             $id
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class UserWarehouse extends Pivot
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $table = 'user_warehouse';
 
     /**
@@ -54,7 +56,7 @@ class UserWarehouse extends Pivot
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -63,7 +65,7 @@ class UserWarehouse extends Pivot
         ];
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Warehouse, $this> */
+    /** @return HasMany<Warehouse, $this> */
     public function assignedWarehouses(): HasMany
     {
         return $this->hasMany(Warehouse::class, 'id', 'warehouse_id');

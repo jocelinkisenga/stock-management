@@ -104,7 +104,7 @@ class KpiTracking extends Component
         }
     }
 
-    private function loadComparisonData(\Carbon\Carbon $dateFrom, \Carbon\Carbon $dateTo): void
+    private function loadComparisonData(Carbon $dateFrom, Carbon $dateTo): void
     {
         $periodDays = $dateFrom->diffInDays($dateTo);
 
@@ -125,7 +125,7 @@ class KpiTracking extends Component
 
         $cacheKey = 'kpi_compare_' . $this->kpiType . '_' . $this->comparisonPeriod . '_' . $dateFrom->format('Ymd') . '_' . $dateTo->format('Ymd');
 
-        $this->comparisonData = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, fn() => match ($this->kpiType) {
+        $this->comparisonData = \Illuminate\Support\Facades\Cache::remember($cacheKey, 3600, fn () => match ($this->kpiType) {
             'revenue' => resolve(\App\Services\AnalyticsService::class)->getRevenueKpis($comparisonDateFrom, $comparisonDateTo),
             'profitability' => resolve(\App\Services\AnalyticsService::class)->getProfitabilityKpis($comparisonDateFrom, $comparisonDateTo),
             'efficiency' => resolve(\App\Services\AnalyticsService::class)->getEfficiencyKpis($comparisonDateFrom, $comparisonDateTo),

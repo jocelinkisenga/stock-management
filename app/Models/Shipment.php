@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property-read Sale|null $sale
@@ -21,8 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Shipment extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public const ATTRIBUTES = [
         'user_id',
@@ -59,7 +60,7 @@ class Shipment extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -69,7 +70,7 @@ class Shipment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Sale, $this>
+     * @return BelongsTo<Sale, $this>
      */
     public function sale(): BelongsTo
     {
@@ -77,7 +78,7 @@ class Shipment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

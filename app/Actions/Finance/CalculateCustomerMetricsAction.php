@@ -254,7 +254,7 @@ final class CalculateCustomerMetricsAction
             ->groupBy('period')
             ->orderBy('period')
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'period' => $item->period,
                 'new_customers' => $item->new_customers,
             ])
@@ -267,7 +267,7 @@ final class CalculateCustomerMetricsAction
         $customerRevenue = Customer::with(['sales' => function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
-        }])->get()->map(fn($customer) => [
+        }])->get()->map(fn ($customer) => [
             'customer_id' => $customer->id,
             'customer_name' => $customer->name,
             'total_revenue' => $customer->sales->sum('total_amount'),
@@ -321,7 +321,7 @@ final class CalculateCustomerMetricsAction
         $customerValues = Customer::with(['sales' => function ($query) use ($startDate, $endDate): void {
             $query->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', 'completed');
-        }])->get()->map(fn($customer) => $customer->sales->sum('total_amount'))->filter(fn ($value): bool => $value > 0)->sort();
+        }])->get()->map(fn ($customer) => $customer->sales->sum('total_amount'))->filter(fn ($value): bool => $value > 0)->sort();
 
         $total = $customerValues->count();
 
@@ -423,6 +423,7 @@ final class CalculateCustomerMetricsAction
         // This would typically come from a marketing_campaigns or marketing_spend table
         // For now, we'll use a placeholder calculation
         $totalSpend = 10000;
+
         // Placeholder
         return [
             'total' => $totalSpend,

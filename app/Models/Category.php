@@ -81,7 +81,7 @@ class Category extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Product, $this>
+     * @return HasMany<Product, $this>
      */
     public function products(): HasMany
     {
@@ -90,13 +90,13 @@ class Category extends Model
 
     protected function productsCount(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
-        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: fn() => $this->products()->count());
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: fn () => $this->products()->count());
     }
 
-    protected static function booted ()
+    protected static function booted()
     {
-        static::creating(function($model) {
-            if(empty($model->code)){
+        static::creating(function ($model) {
+            if (empty($model->code)) {
                 $model->code = Str::random(8);
             }
         });

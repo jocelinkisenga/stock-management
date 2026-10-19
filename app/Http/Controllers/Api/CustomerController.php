@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
@@ -12,7 +13,6 @@ use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class CustomerController extends Controller
 {
@@ -59,7 +59,7 @@ class CustomerController extends Controller
         $customer = Customer::query()->find($id);
 
         if ($customer === null) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'Customer not found'], 404);
+            return new JsonResponse(['message' => 'Customer not found'], 404);
         }
 
         return new CustomerResource($customer);
@@ -84,6 +84,6 @@ class CustomerController extends Controller
         $customer = Customer::query()->findOrFail($id);
         $customer->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'Customer deleted successfully']);
+        return new JsonResponse(['message' => 'Customer deleted successfully']);
     }
 }
