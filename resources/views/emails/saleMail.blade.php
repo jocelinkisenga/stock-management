@@ -1,4 +1,4 @@
-{{-- @component('mail::message')
+@component('mail::message')
 
 <h2 class="text-center">{{__('Sale order')}}</h2>
 
@@ -8,4 +8,4 @@
 
 <span>{{__('Regards')}},<span><br>
  {{ settings()->company_name ?? config('app.name') }}
-@endcomponent --}}
+@endcomponent
