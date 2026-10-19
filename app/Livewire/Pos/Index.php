@@ -159,7 +159,7 @@ class Index extends Component
         $this->alert('success', __('Sale created successfully!'));
         $this->checkoutModal = false;
 
-        dispatch(new PaymentNotification($sale));
+        // dispatch(new PaymentNotification($sale));
 
         $settings = \App\Models\Setting::first();
         $action = $settings->pos_post_checkout_action ?? 'preview_a4';
