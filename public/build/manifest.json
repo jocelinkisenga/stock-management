@@ -1,0 +1,54 @@
+{
+  "_charts-XnG8mfEo.js": {
+    "file": "assets/charts-XnG8mfEo.js",
+    "name": "charts"
+  },
+  "_realtime-l0sNRNKZ.js": {
+    "file": "assets/realtime-l0sNRNKZ.js",
+    "name": "realtime"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-D0aA9rwL.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-CTAAxXor.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-0tWRmhM3.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/desktop.css": {
+    "file": "assets/desktop-CJfdrZqp.css",
+    "src": "resources/css/desktop.css",
+    "isEntry": true,
+    "name": "desktop",
+    "names": [
+      "desktop.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-C4WGxsaP.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_charts-XnG8mfEo.js"
+    ],
+    "css": [
+      "assets/app-CQwwu-JK.css"
+    ]
+  },
+  "resources/js/desktop.js": {
+    "file": "assets/desktop-B2coXfSy.js",
+    "name": "desktop",
+    "src": "resources/js/desktop.js",
+    "isEntry": true
+  }
+}
