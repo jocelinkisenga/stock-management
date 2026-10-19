@@ -20,7 +20,7 @@ class SaleObserver
         if ($sale->customer) {
             if (in_array('mail', $activeChannels) && ! empty($sale->customer->email)) {
                 Notification::route('mail', $sale->customer->email)
-                    ->notify(new SaleNotification($sale, 'saleMail'));
+                    ->notify(new SaleNotification($sale, 'mail'));
             }
 
             if (in_array('whatsapp', $activeChannels) && ! empty($sale->customer->phone)) {
