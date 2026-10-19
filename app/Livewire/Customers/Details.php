@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Customers;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Utils\Datatable;
 use App\Models\Customer;
 use App\Models\Sale;
@@ -14,6 +12,7 @@ use App\Traits\WithAlert;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]

@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 namespace Tests\Browser;
-use PHPUnit\Framework\Attributes\Test;
 
 use App\Models\Setting;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use Laravel\Dusk\Browser;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\DuskTestCase;
 
 class InstallationSkipTest extends DuskTestCase

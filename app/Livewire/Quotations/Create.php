@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Quotations;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Forms\QuotationForm;
 use App\Livewire\Utils\WithModels;
 use App\Services\QuotationService;
@@ -13,6 +11,7 @@ use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]

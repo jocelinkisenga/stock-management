@@ -97,7 +97,7 @@ class SaleService
             }
 
             if ($inventoryItems !== []) {
-                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $saleData['warehouse_id'], $saleData['user_id'], 'sale'));
+                dispatch(new SyncInventoryJob($inventoryItems, $saleData['warehouse_id'], $saleData['user_id'], 'sale'));
             }
 
             if ($saleData['paid_amount'] > 0 && ! $isDraft) {
@@ -196,7 +196,7 @@ class SaleService
             }
 
             if ($inventoryItems !== []) {
-                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $saleData['warehouse_id'], auth()->id(), 'sale'));
+                dispatch(new SyncInventoryJob($inventoryItems, $saleData['warehouse_id'], auth()->id(), 'sale'));
             }
 
             return $sale;

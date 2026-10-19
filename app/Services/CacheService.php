@@ -181,10 +181,10 @@ class CacheService
     {
         try {
             // Warm up categories
-            self::cacheCategories('all', fn() => \App\Models\Category::query()->active()->get());
+            self::cacheCategories('all', fn () => \App\Models\Category::query()->active()->get());
 
             // Warm up product counts
-            self::cacheProducts('counts', fn() => [
+            self::cacheProducts('counts', fn () => [
                 'total' => \App\Models\Product::query()->count(),
                 'active' => \App\Models\Product::query()->where('status', true)->count(),
                 'low_stock' => \App\Models\Product::query()->where('quantity', '<', 10)->count(),

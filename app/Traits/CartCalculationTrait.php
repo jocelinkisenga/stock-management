@@ -82,10 +82,10 @@ trait CartCalculationTrait
     /** Apply conditions to an amount */
     protected function applyConditionsToAmount(float $amount, string $target): float
     {
-        $applicableConditions = array_filter($this->conditions, fn($condition) => is_array($condition) && ($condition['target'] ?? 'subtotal') === $target);
+        $applicableConditions = array_filter($this->conditions, fn ($condition) => is_array($condition) && ($condition['target'] ?? 'subtotal') === $target);
 
         // Sort conditions by order
-        usort($applicableConditions, fn(array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
+        usort($applicableConditions, fn (array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
 
         foreach ($applicableConditions as $applicableCondition) {
             // Ensure condition is an array
@@ -106,7 +106,7 @@ trait CartCalculationTrait
         $validConditions = array_filter($conditions, is_array(...));
 
         // Sort conditions by order
-        usort($validConditions, fn(array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
+        usort($validConditions, fn (array $a, array $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
 
         foreach ($validConditions as $validCondition) {
             $amount = $this->applyCondition($amount, $validCondition);
@@ -158,7 +158,7 @@ trait CartCalculationTrait
     /** Remove a condition by name */
     public function removeCondition(string $name): self
     {
-        $this->conditions = array_filter($this->conditions, fn(array $condition) => ($condition['name'] ?? '') !== $name);
+        $this->conditions = array_filter($this->conditions, fn (array $condition) => ($condition['name'] ?? '') !== $name);
 
         return $this;
     }
@@ -172,7 +172,7 @@ trait CartCalculationTrait
     /** Get conditions by type */
     public function getConditionsByType(string $type): array
     {
-        return array_filter($this->conditions, fn($condition) => is_array($condition) && ($condition['type'] ?? '') === $type);
+        return array_filter($this->conditions, fn ($condition) => is_array($condition) && ($condition['type'] ?? '') === $type);
     }
 
     /** Clear all conditions */

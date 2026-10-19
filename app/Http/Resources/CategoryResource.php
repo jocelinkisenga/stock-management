@@ -6,6 +6,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
+use Override;
 
 class CategoryResource extends JsonResource
 {
@@ -16,7 +17,7 @@ class CategoryResource extends JsonResource
      *
      * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
      */
-    #[\Override]
+    #[Override]
     public function toArray($request)
     {
         return [

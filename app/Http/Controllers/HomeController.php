@@ -15,7 +15,6 @@ use App\Models\SalePayment;
 use App\Models\SaleReturnPayment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
@@ -35,7 +34,7 @@ class HomeController extends Controller
             ->whereYear('date', date('Y'))
             ->sum('amount') / 100;
 
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'sales' => $currentMonthSales,
             'purchases' => $currentMonthPurchases,
             'expenses' => $currentMonthExpenses,
@@ -49,7 +48,7 @@ class HomeController extends Controller
         $jsonResponse = $this->salesChartData();
         $purchases = $this->purchasesChartData();
 
-        return new \Illuminate\Http\JsonResponse(['sales' => $jsonResponse, 'purchases' => $purchases]);
+        return new JsonResponse(['sales' => $jsonResponse, 'purchases' => $purchases]);
     }
 
     public function paymentChart(): JsonResponse
@@ -124,7 +123,7 @@ class HomeController extends Controller
             $sent_payments[] = $date_sent;
         }
 
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'payment_sent' => $sent_payments,
             'payment_received' => $received_payments,
             'months' => $months,
@@ -162,7 +161,7 @@ class HomeController extends Controller
             $days[] = $key;
         }
 
-        return new \Illuminate\Http\JsonResponse(['data' => $data, 'days' => $days]);
+        return new JsonResponse(['data' => $data, 'days' => $days]);
     }
 
     public function purchasesChartData(): JsonResponse
@@ -196,7 +195,7 @@ class HomeController extends Controller
             $days[] = $key;
         }
 
-        return new \Illuminate\Http\JsonResponse(['data' => $data, 'days' => $days]);
+        return new JsonResponse(['data' => $data, 'days' => $days]);
     }
 
     public function changeLanguage(string $locale): RedirectResponse

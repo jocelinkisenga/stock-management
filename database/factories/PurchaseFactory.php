@@ -75,7 +75,7 @@ class PurchaseFactory extends Factory
     /** Indicate that the purchase is fully paid. */
     public function paid(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'payment_status' => 'paid',
             'paid_amount' => $attributes['total_amount'],
             'due_amount' => 0,
@@ -85,7 +85,7 @@ class PurchaseFactory extends Factory
     /** Indicate that the purchase is pending payment. */
     public function pending(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'payment_status' => 'pending',
             'paid_amount' => 0,
             'due_amount' => $attributes['total_amount'],

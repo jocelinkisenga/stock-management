@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 namespace Tests\Browser;
-use PHPUnit\Framework\Attributes\Test;
 
 use Exception;
 use Laravel\Dusk\Browser;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\DuskTestCase;
 
 class DebugInstallationTest extends DuskTestCase

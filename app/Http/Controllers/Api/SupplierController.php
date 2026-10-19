@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
@@ -12,7 +13,6 @@ use App\Models\Supplier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class SupplierController extends Controller
 {
@@ -59,7 +59,7 @@ class SupplierController extends Controller
         $supplier = Supplier::query()->find($id);
 
         if ($supplier === null) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'Supplier not found'], 404);
+            return new JsonResponse(['message' => 'Supplier not found'], 404);
         }
 
         return new SupplierResource($supplier);
@@ -84,6 +84,6 @@ class SupplierController extends Controller
         $supplier = Supplier::query()->findOrFail($id);
         $supplier->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'Supplier deleted successfully']);
+        return new JsonResponse(['message' => 'Supplier deleted successfully']);
     }
 }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\MovementType;
-use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property int                             $id
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string                          $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Model|\Illuminate\Database\Eloquent\Model $movable
+ * @property-read Model|Model $movable
  * @property-read ProductWarehouse|null $productWarehouse
  * @property-read User $user
  *
@@ -64,7 +64,7 @@ class Movement extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -78,7 +78,7 @@ class Movement extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -89,7 +89,7 @@ class Movement extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\ProductWarehouse, $this>
+     * @return BelongsTo<ProductWarehouse, $this>
      */
     public function productWarehouse(): BelongsTo
     {

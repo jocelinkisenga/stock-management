@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ComprehensiveDataSeeder::class);
 
         // Finally run transaction seeders if they exist
-        if (class_exists(\Database\Seeders\SalesAndPurchasesSeeder::class)) {
+        if (class_exists(SalesAndPurchasesSeeder::class)) {
             $this->call(SalesAndPurchasesSeeder::class);
         }
     }

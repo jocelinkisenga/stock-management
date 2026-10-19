@@ -40,8 +40,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class AdjustedProduct extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public const ATTRIBUTES = [
         'id',
@@ -59,7 +59,7 @@ class AdjustedProduct extends Model
     protected $guarded = [];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Adjustment, $this>
+     * @return BelongsTo<Adjustment, $this>
      */
     public function adjustment(): BelongsTo
     {
@@ -67,7 +67,7 @@ class AdjustedProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -75,7 +75,7 @@ class AdjustedProduct extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function warehouse(): BelongsTo
     {

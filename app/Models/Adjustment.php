@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\HasAdvancedFilter;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int         $id
@@ -48,9 +50,9 @@ use Illuminate\Support\Carbon;
  */
 class Adjustment extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use SoftDeletes;
 
     protected const ATTRIBUTES = [
@@ -72,12 +74,12 @@ class Adjustment extends Model
     protected function date(): Attribute
     {
         return Attribute::make(
-            get: static fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
+            get: static fn (DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -88,7 +90,7 @@ class Adjustment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function warehouse(): BelongsTo
     {
@@ -99,14 +101,14 @@ class Adjustment extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\AdjustedProduct, $this>
+     * @return HasMany<AdjustedProduct, $this>
      */
     public function adjustedProducts(): HasMany
     {
         return $this->hasMany(AdjustedProduct::class, 'adjustment_id', 'id');
     }
 
-    #[\Override]
+    #[Override]
     protected static function boot()
     {
         parent::boot();
@@ -116,7 +118,8 @@ class Adjustment extends Model
             $model->reference = make_reference_id($prefix, self::class);
         });
     }
-    #[\Override]
+
+    #[Override]
     protected function casts(): array
     {
         return [

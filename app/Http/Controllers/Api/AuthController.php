@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->accessToken;
 
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'token' => $token,
             'token_type' => 'Bearer',
         ]);
@@ -38,7 +38,7 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         if (! Auth::attempt($request->only(['email', 'password']))) {
-            return new \Illuminate\Http\JsonResponse([
+            return new JsonResponse([
                 'message' => 'Invalid login details',
             ], 401);
         }
@@ -47,7 +47,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->accessToken;
 
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'token' => $token,
             'token_type' => 'Bearer',
         ]);

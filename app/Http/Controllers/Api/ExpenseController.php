@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
@@ -12,7 +13,6 @@ use App\Models\Expense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class ExpenseController extends Controller
 {
@@ -65,7 +65,7 @@ class ExpenseController extends Controller
         $expense = Expense::query()->find($id);
 
         if ($expense === null) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'Expense not found'], 404);
+            return new JsonResponse(['message' => 'Expense not found'], 404);
         }
 
         return new ExpenseResource($expense);
@@ -90,6 +90,6 @@ class ExpenseController extends Controller
         $expense = Expense::query()->findOrFail($id);
         $expense->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'Expense deleted successfully']);
+        return new JsonResponse(['message' => 'Expense deleted successfully']);
     }
 }

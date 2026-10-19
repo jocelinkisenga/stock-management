@@ -183,7 +183,7 @@ class DesktopErrorLog extends Component
         });
 
         // Sort by timestamp (newest first)
-        usort($filtered, fn(array $a, array $b) => strtotime((string) $b['timestamp']) - strtotime((string) $a['timestamp']));
+        usort($filtered, fn (array $a, array $b) => strtotime((string) $b['timestamp']) - strtotime((string) $a['timestamp']));
 
         return $filtered;
     }

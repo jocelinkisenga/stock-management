@@ -14,7 +14,6 @@ class Show extends Component
 {
     use WithAlert;
 
-    /** @var bool */
     public bool $showModal = false;
 
     public mixed $quotation;

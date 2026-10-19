@@ -52,8 +52,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class SaleReturnDetail extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     public const ATTRIBUTES = [
         'id',
@@ -74,7 +74,7 @@ class SaleReturnDetail extends Model
     protected $guarded = [];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -82,7 +82,7 @@ class SaleReturnDetail extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\SaleReturnPayment, $this>
+     * @return BelongsTo<SaleReturnPayment, $this>
      */
     public function saleReturn(): BelongsTo
     {

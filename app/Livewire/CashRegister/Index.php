@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\CashRegister;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Utils\Datatable;
 use App\Models\CashRegister;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -19,7 +18,6 @@ class Index extends Component
 {
     use Datatable;
 
-    /** @var mixed */
     public mixed $cashRegister;
 
     public bool $showFilters = false;

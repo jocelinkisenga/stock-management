@@ -7,11 +7,7 @@ namespace App\Jobs;
 use App\Models\Sale;
 use App\Models\User;
 use App\Notifications\PaymentDue;
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class PaymentNotification implements ShouldQueue
 {
@@ -20,9 +16,7 @@ class PaymentNotification implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected \App\Models\Sale $sale)
-    {
-    }
+    public function __construct(protected Sale $sale) {}
 
     /**
      * Execute the job.

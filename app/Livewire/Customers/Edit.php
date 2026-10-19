@@ -23,7 +23,6 @@ class Edit extends Component
 
     public bool $showModal = false;
 
-    /** @var mixed */
     public mixed $customer;
 
     public CustomerForm $form;

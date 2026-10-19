@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Services\CartService;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 /**
  * Cart Service Provider
@@ -15,19 +16,19 @@ use Illuminate\Support\ServiceProvider;
 class CartServiceProvider extends ServiceProvider
 {
     /** Register services. */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
-        $this->app->singleton('cart', fn($app) => new CartService);
+        $this->app->singleton('cart', fn ($app) => new CartService);
 
-        $this->app->bind(fn($app): \App\Services\CartService => $app->make('cart'));
+        $this->app->bind(fn ($app): CartService => $app->make('cart'));
     }
 
     /** Bootstrap services. */
     public function boot(): void {}
 
     /** Get the services provided by the provider. */
-    #[\Override]
+    #[Override]
     public function provides(): array
     {
         return ['cart', CartService::class];

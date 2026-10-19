@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\ExpenseCategories;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Utils\Datatable;
 use App\Models\ExpenseCategory;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
@@ -22,7 +21,6 @@ class Index extends Component
     use Datatable;
     use WithAlert;
 
-    /** @var mixed */
     public mixed $expenseCategory;
 
     public string $model = ExpenseCategory::class;

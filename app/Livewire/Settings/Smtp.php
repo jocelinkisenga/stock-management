@@ -32,7 +32,7 @@ class Smtp extends Component
     public function mount(): void
     {
         $settings = \App\Models\Setting::query()->first();
-        
+
         $this->mail_mailer = $settings->mail_mailer ?? config('mail.mailer');
         $this->mail_host = $settings->smtp_host ?? config('mail.host');
         $this->mail_port = (string) ($settings->smtp_port ?? config('mail.port'));
@@ -52,7 +52,7 @@ class Smtp extends Component
     {
         try {
             $settings = \App\Models\Setting::query()->first();
-            
+
             if ($settings) {
                 $settings->update([
                     'mail_mailer' => $this->mail_mailer,

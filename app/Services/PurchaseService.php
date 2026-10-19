@@ -96,7 +96,7 @@ class PurchaseService
             }
 
             if ($inventoryItems !== []) {
-                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $purchaseData['warehouse_id'], $purchaseData['user_id'], 'purchase'));
+                dispatch(new SyncInventoryJob($inventoryItems, $purchaseData['warehouse_id'], $purchaseData['user_id'], 'purchase'));
             }
 
             if ($purchaseData['paid_amount'] > 0 && ! $isDraft) {
@@ -192,7 +192,7 @@ class PurchaseService
             }
 
             if ($inventoryItems !== []) {
-                dispatch(new \App\Jobs\SyncInventoryJob($inventoryItems, $purchaseData['warehouse_id'], auth()->id(), 'purchase'));
+                dispatch(new SyncInventoryJob($inventoryItems, $purchaseData['warehouse_id'], auth()->id(), 'purchase'));
             }
 
             return $purchase;

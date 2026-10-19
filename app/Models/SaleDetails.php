@@ -55,6 +55,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SaleDetails extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -77,7 +78,7 @@ class SaleDetails extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -85,7 +86,7 @@ class SaleDetails extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Sale, $this>
+     * @return BelongsTo<Sale, $this>
      */
     public function sale(): BelongsTo
     {
@@ -93,7 +94,7 @@ class SaleDetails extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function warehouse(): BelongsTo
     {

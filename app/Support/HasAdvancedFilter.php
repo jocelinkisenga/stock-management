@@ -79,7 +79,7 @@ trait HasAdvancedFilter
 
         $data['filter_match'] = 'or';
 
-        $data['f'] = array_map(fn($column) => [
+        $data['f'] = array_map(fn ($column) => [
             'column' => $column,
             'operator' => 'contains',
             'query_1' => $data['s'],

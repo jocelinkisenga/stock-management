@@ -52,10 +52,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PurchaseDetail extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $guarded = [];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Product, $this>
+     * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
@@ -63,7 +64,7 @@ class PurchaseDetail extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Purchase, $this>
+     * @return BelongsTo<Purchase, $this>
      */
     public function purchase(): BelongsTo
     {

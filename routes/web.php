@@ -206,7 +206,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'auth.session', 'rol
     Route::prefix('purchase')->name('purchase.')->group(function () {
         Route::livewire('/create', CreatePurchase::class)->name('create');
         Route::livewire('/edit/{id}', EditPurchase::class)->name('edit');
-       // Route::livewire('/update/{id}', EditPurchase::class)->name('edit');
+        // Route::livewire('/update/{id}', EditPurchase::class)->name('edit');
         Route::livewire('/print/{id}', PurchaseInvoice::class)->name('invoice');
     });
 

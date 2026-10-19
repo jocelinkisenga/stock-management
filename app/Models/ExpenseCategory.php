@@ -61,7 +61,7 @@ class ExpenseCategory extends Model
         'description',
     ];
 
-    /** @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Expense, $this> */
+    /** @return HasMany<Expense, $this> */
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class, 'category_id', 'id');

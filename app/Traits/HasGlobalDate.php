@@ -16,7 +16,7 @@ trait HasGlobalDate
         return $date->format('Y-m-d');
     }
 
-    protected function setDateAttribute(\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): void
+    protected function setDateAttribute(DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): void
     {
         $this->attributes['date'] = \Illuminate\Support\Facades\Date::parse($value)->format('Y-m-d');
     }

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Override;
 
 /**
  * @property string                          $id
@@ -100,7 +101,7 @@ class Customer extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -109,7 +110,7 @@ class Customer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Sale, $this>
+     * @return HasMany<Sale, $this>
      */
     public function sales(): HasMany
     {
@@ -152,7 +153,7 @@ class Customer extends Model
 
     protected function scopeSearchByName(mixed $query, mixed $name)
     {
-        return $query->when(filled($name), fn($query) => $query->where('name', 'like', '%' . $name . '%'));
+        return $query->when(filled($name), fn ($query) => $query->where('name', 'like', '%' . $name . '%'));
     }
 
     public function getTotalSalesAmount(): float

@@ -42,8 +42,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CashRegister extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     /** @var array<int, string> */
     public const ATTRIBUTES = [
@@ -60,7 +60,7 @@ class CashRegister extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -68,7 +68,7 @@ class CashRegister extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function warehouse(): BelongsTo
     {

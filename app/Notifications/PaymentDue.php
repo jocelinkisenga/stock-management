@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use App\Models\Sale;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -22,7 +21,6 @@ class PaymentDue extends Notification
 
     /**
      * Create a new notification instance.
-     *
      */
     public function __construct(Sale $sale)
     {

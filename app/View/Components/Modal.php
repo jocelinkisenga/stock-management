@@ -8,9 +8,7 @@ use Illuminate\View\Component;
 
 class Modal extends Component
 {
-    public function __construct(public $id = null, public $name = 'modal', public $show = false, public $maxWidth = '2xl', public $closeable = true, public $focusable = true, public $persistent = false, public $backdrop = true, public $animation = 'fade', public $zIndex = 'z-50', public $closeOnEscape = true, public $trapFocus = true, public $restoreScroll = true, public $lazy = false, public $cacheContent = false)
-    {
-    }
+    public function __construct(public $id = null, public $name = 'modal', public $show = false, public $maxWidth = '2xl', public $closeable = true, public $focusable = true, public $persistent = false, public $backdrop = true, public $animation = 'fade', public $zIndex = 'z-50', public $closeOnEscape = true, public $trapFocus = true, public $restoreScroll = true, public $lazy = false, public $cacheContent = false) {}
 
     public function maxWidthClass(): string
     {

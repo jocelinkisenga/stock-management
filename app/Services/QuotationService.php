@@ -51,7 +51,7 @@ class QuotationService
 
     public function update(Quotation $quotation, array $data, $cartContent, $cartTax, $cartDiscount): Quotation
     {
-        return DB::transaction(function () use ($quotation, $data, $cartContent, $cartTax, $cartDiscount): \App\Models\Quotation {
+        return DB::transaction(function () use ($quotation, $data, $cartContent, $cartTax, $cartDiscount): Quotation {
             foreach ($quotation->quotationDetails as $quotation_detail) {
                 $quotation_detail->delete();
             }

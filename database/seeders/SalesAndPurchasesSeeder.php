@@ -14,7 +14,6 @@ use App\Models\Sale;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Warehouse;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

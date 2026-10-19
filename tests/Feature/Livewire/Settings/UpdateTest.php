@@ -6,8 +6,8 @@ namespace Tests\Feature\Livewire\Settings;
 
 use App\Livewire\Settings\Update;
 use Livewire\Livewire;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class UpdateTest extends TestCase
 {

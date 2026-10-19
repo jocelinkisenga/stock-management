@@ -53,7 +53,7 @@ class MaintenanceMode extends Component
 
         Setting::set('site_maintenance_secret', $this->secret);
 
-        dispatch(new \App\Jobs\UnderMaintenanceJob($this->secret, $this->refresh));
+        dispatch(new UnderMaintenanceJob($this->secret, $this->refresh));
 
         $this->alert('success', implode(' ', ['status' => $this->status ? __('System turned on') : __('System turned off')]));
 

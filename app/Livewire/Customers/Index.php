@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Customers;
 
-use Livewire\Attributes\Title;
-
 use App\Exports\CustomerExport;
 use App\Imports\CustomerImport;
 use App\Livewire\Utils\Datatable;
@@ -17,6 +15,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;

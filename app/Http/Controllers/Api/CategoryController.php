@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -12,7 +13,6 @@ use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class CategoryController extends Controller
 {
@@ -64,7 +64,7 @@ class CategoryController extends Controller
         $category = Category::query()->find($id);
 
         if (is_null($category)) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'Category not found'], 404);
+            return new JsonResponse(['message' => 'Category not found'], 404);
         }
 
         return new CategoryResource($category);
@@ -89,6 +89,6 @@ class CategoryController extends Controller
         $category = Category::query()->findOrFail($id);
         $category->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'Category deleted successfully']);
+        return new JsonResponse(['message' => 'Category deleted successfully']);
     }
 }

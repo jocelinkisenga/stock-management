@@ -20,7 +20,7 @@ class DesktopController extends Controller
     {
         $this->middleware(function ($request, $next) {
             if (! EnvironmentService::isDesktop()) {
-                return new \Illuminate\Http\JsonResponse([
+                return new JsonResponse([
                     'success' => false,
                     'message' => 'Desktop features are only available in desktop mode',
                 ], 403);
@@ -47,7 +47,7 @@ class DesktopController extends Controller
 
         $result = $this->shortcutService->executeShortcut($shortcut);
 
-        return new \Illuminate\Http\JsonResponse($result);
+        return new JsonResponse($result);
     }
 
     /** Get all available shortcuts */
@@ -67,7 +67,7 @@ class DesktopController extends Controller
             }
         }
 
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'success' => true,
             'shortcuts' => $shortcuts,
             'total' => count($shortcuts),
@@ -85,7 +85,7 @@ class DesktopController extends Controller
         $available = $this->shortcutService->isShortcutAvailable($shortcut);
         $description = $this->shortcutService->getShortcutDescription($shortcut);
 
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'success' => true,
             'shortcut' => $shortcut,
             'available' => $available,
@@ -99,7 +99,7 @@ class DesktopController extends Controller
         try {
             $this->shortcutService->registerShortcuts();
 
-            return new \Illuminate\Http\JsonResponse([
+            return new JsonResponse([
                 'success' => true,
                 'message' => 'Desktop shortcuts registered successfully',
             ]);
@@ -109,7 +109,7 @@ class DesktopController extends Controller
                 'trace' => $exception->getTraceAsString(),
             ]);
 
-            return new \Illuminate\Http\JsonResponse([
+            return new JsonResponse([
                 'success' => false,
                 'message' => 'Failed to register shortcuts: ' . $exception->getMessage(),
             ], 500);
@@ -119,7 +119,7 @@ class DesktopController extends Controller
     /** Get desktop environment status */
     public function getDesktopStatus(): JsonResponse
     {
-        return new \Illuminate\Http\JsonResponse([
+        return new JsonResponse([
             'success' => true,
             'desktop_mode' => EnvironmentService::isDesktop(),
             'environment' => EnvironmentService::getEnvironmentType(),
@@ -152,7 +152,7 @@ class DesktopController extends Controller
         try {
             $result = $this->executeDesktopAction($action, $params);
 
-            return new \Illuminate\Http\JsonResponse($result);
+            return new JsonResponse($result);
         } catch (Exception $exception) {
             Log::error('Desktop action failed', [
                 'action' => $action,
@@ -160,7 +160,7 @@ class DesktopController extends Controller
                 'error' => $exception->getMessage(),
             ]);
 
-            return new \Illuminate\Http\JsonResponse([
+            return new JsonResponse([
                 'success' => false,
                 'message' => 'Action failed: ' . $exception->getMessage(),
             ], 500);
@@ -310,7 +310,7 @@ class DesktopController extends Controller
             $errorHandler = resolve(\App\Native\Services\DesktopErrorHandler::class);
             $result = $errorHandler->handleJavaScriptError($request->all());
 
-            return new \Illuminate\Http\JsonResponse([
+            return new JsonResponse([
                 'success' => true,
                 'error_id' => $result['error_id'],
                 'message' => 'JavaScript error logged successfully',
@@ -321,7 +321,7 @@ class DesktopController extends Controller
                 'request_data' => $request->all(),
             ]);
 
-            return new \Illuminate\Http\JsonResponse([
+            return new JsonResponse([
                 'success' => false,
                 'message' => 'Failed to log JavaScript error',
             ], 500);
