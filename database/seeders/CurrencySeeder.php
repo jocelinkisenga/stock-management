@@ -17,11 +17,6 @@ class CurrencySeeder extends Seeder
     {
         $currencies = [
             [
-                'name' => 'Dirham Marocain',
-                'code' => Str::upper('MAD'),
-                'locale' => 'fr_MA',
-            ],
-            [
                 'name' => 'Euro',
                 'code' => Str::upper('EUR'),
                 'locale' => 'fr_FR',
@@ -30,17 +25,7 @@ class CurrencySeeder extends Seeder
                 'name' => 'Dollar',
                 'code' => Str::upper('USD'),
                 'locale' => 'en_US',
-            ],
-            [
-                'name' => 'Pound',
-                'code' => Str::upper('GBP'),
-                'locale' => 'en_GB',
-            ],
-            [
-                'name' => 'Turkish Lira',
-                'code' => Str::upper('TRY'),
-                'locale' => 'tr_TR',
-            ],
+            ]
         ];
 
         foreach ($currencies as $currency) {

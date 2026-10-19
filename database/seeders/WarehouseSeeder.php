@@ -16,8 +16,7 @@ class WarehouseSeeder extends Seeder
     public function run(): void
     {
         $warehouses = [
-            ['name' => 'warehouse 1', 'city' => 'casablanca', 'phone' => '061234567896', 'email' => 'warehouse1@casa.ma', 'country' => 'morocco'],
-            ['name' => 'warehouse 2', 'city' => 'casablanca', 'phone' => '061234567898', 'email' => 'warehouse2@casa.ma', 'country' => 'morocco'],
+            ['name' => 'kin marche jr', 'city' => 'kinshasa', 'phone' => '061234567896', 'email' => 'warehouse1@kinmarche.ma', 'country' => 'morocco']
         ];
 
         collect($warehouses)->each(function ($warehouse): void {

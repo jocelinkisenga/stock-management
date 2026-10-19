@@ -198,9 +198,9 @@
             </div>
         </div>
     </x-page-container>
-
+@if ($warehouse != null)
     <livewire:warehouses.edit :warehouse="$warehouse" />
-
+@endif
     <livewire:warehouses.create />
 
 </div>

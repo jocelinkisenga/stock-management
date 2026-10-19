@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -27,8 +29,10 @@ class StepManager extends Component
     use WithAlert;
     use WithFileUploads;
 
+    #[Url]
     public int $currentStep = 1;
 
+    #[Url]
     public ?string $persona = null; // 'retail' or 'technician'
 
     public bool $isDesktopMode = false;
@@ -96,6 +100,11 @@ class StepManager extends Component
             $this->persona = 'retail';
         }
 
+        // Securiser l'etape courante si hors limites
+        if ($this->currentStep < 1 || $this->currentStep > count($this->steps)) {
+            $this->currentStep = 1;
+        }
+
         // Pre-fill values
         try {
             if (Schema::hasTable('settings')) {
@@ -118,9 +127,9 @@ class StepManager extends Component
             $this->database['port'] = env('DB_PORT', '3306');
             $this->database['database'] = env('DB_DATABASE', '');
             $this->database['username'] = env('DB_USERNAME', 'root');
-            
+
             $this->admin_email = 'admin@example.com';
-            
+
             $this->runPreflightChecks();
         }
     }
@@ -261,7 +270,7 @@ class StepManager extends Component
         }
 
         // Extensions
-        $requiredExtensions = ['BCMath', 'Ctype', 'DOM', 'Fileinfo', 'JSON', 'Mbstring', 'OpenSSL', 'PCRE', 'PDO', 'Tokenizer', 'XML', 'sqlite3'];
+        $requiredExtensions = ['BCMath', 'Ctype', 'DOM', 'Fileinfo', 'JSON', 'Mbstring', 'OpenSSL', 'PCRE', 'PDO', 'Tokenizer', 'XML'];
 
         foreach ($requiredExtensions as $requiredExtension) {
             $loaded = extension_loaded(strtolower($requiredExtension));
@@ -353,7 +362,6 @@ class StepManager extends Component
             $this->connectionSuccess = true;
             $this->connectionMessage = __('Database connection successful!');
 
-            // Clean flash session so an old error doesn't block validation
             session()->forget('connection_error');
             $this->alert('success', $this->connectionMessage);
         } catch (Exception $exception) {
@@ -371,26 +379,46 @@ class StepManager extends Component
             return;
         }
 
-        // Attempt connection test if not passed
         if (! $this->connectionSuccess) {
             $this->testConnection();
         }
 
         if (session()->has('connection_error') || ! $this->connectionSuccess) {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                'database.database' => 'Database connection failed. Please check your settings and test the connection.',
+                'database.database' => __('La connexion a échoué. Vérifiez vos paramètres.'),
             ]);
         }
 
-        // Update .env file
+        $dbName = $this->database['database'];
+        if ($this->database['connection'] === 'sqlite') {
+            $dbName = Str::startsWith($dbName, '/') || preg_match('/^[a-zA-Z]:\\\\/', $dbName)
+                ? $dbName
+                : database_path($dbName ?: 'database.sqlite');
+
+            if (! file_exists($dbName)) {
+                touch($dbName);
+            }
+        }
+
         $this->updateEnv([
             'DB_CONNECTION' => $this->database['connection'],
             'DB_HOST' => $this->database['host'],
             'DB_PORT' => $this->database['port'],
-            'DB_DATABASE' => $this->database['database'],
+            'DB_DATABASE' => $dbName,
             'DB_USERNAME' => $this->database['username'],
             'DB_PASSWORD' => $this->database['password'],
         ]);
+
+        $defaultConn = $this->database['connection'];
+        Config::set("database.connections.{$defaultConn}.database", $dbName);
+        Config::set("database.connections.{$defaultConn}.host", $this->database['host']);
+        Config::set("database.connections.{$defaultConn}.username", $this->database['username']);
+        Config::set("database.connections.{$defaultConn}.password", $this->database['password']);
+
+        Config::set('database.default', $defaultConn);
+
+        DB::purge($defaultConn);
+        DB::reconnect($defaultConn);
     }
 
     private function updateEnv(array $data): void
@@ -412,7 +440,7 @@ class StepManager extends Component
         }
 
         file_put_contents($envPath, $content);
-        Artisan::call('config:clear');
+        // Artisan::call('config:clear') a ete retire pour eviter de reinitialiser la session HTTP en cours.
     }
 
     private function validateCompanyDetails(): void
@@ -449,17 +477,12 @@ class StepManager extends Component
                 $this->setupDesktopDatabase();
             }
 
-            // Run migrations
             $migrateExitCode = Artisan::call('migrate', ['--force' => true]);
 
             if ($migrateExitCode !== 0) {
-                $output = Artisan::output();
-
                 throw new Exception('Database migration failed. Details in logs.');
-                // Note: The specific output can be too large or contain sensitive info, better to log it and show a generic message or just the last error line
             }
 
-            // Ensure settings table exists and has a record
             if (Setting::query()->count() === 0) {
                 $seeders = [
                     \Database\Seeders\RolesAndPermissionsSeeder::class,
@@ -475,23 +498,18 @@ class StepManager extends Component
                 }
             }
 
-            // Create admin user
             $user = User::query()->updateOrCreate(['email' => $this->admin_email], [
                 'name' => $this->admin_name ?? explode('@', $this->admin_email ?? '')[0],
                 'password' => Hash::make($this->admin_password),
                 'is_admin' => true,
             ]);
 
-            // Assign roles if Spatie is used
             if (method_exists($user, 'assignRole')) {
-                // Ensure role seeder has run
                 $user->assignRole('admin');
             }
 
-            // Update settings
             $this->saveCompanyDetails();
 
-            // Get the settings record and update it
             $settings = Setting::query()->first();
 
             if ($settings) {
@@ -499,10 +517,8 @@ class StepManager extends Component
                 $settings->save();
             }
 
-            // Clear settings cache
             cache()->forget('settings');
 
-            // Install demo data if selected
             if ($this->install_demo_data && $this->selected_business_line) {
                 $this->installDemoData();
             }
@@ -529,7 +545,7 @@ class StepManager extends Component
                 'company_tax' => $this->company_tax,
             ]);
         }
-        
+
         session(['selected_business_line' => $this->selected_business_line]);
         session(['install_demo_data' => $this->install_demo_data]);
     }

@@ -183,9 +183,10 @@
         </div>
         </x-page-container>
 
-
+@if ($brand != null)
     @livewire('brands.show', ['brand' => $brand])
     @livewire('brands.edit', ['brand' => $brand])
+@endif
     <livewire:brands.create />
 
     <!-- Import modal -->

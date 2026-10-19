@@ -67,13 +67,13 @@ class Category extends Model
         'status',
     ];
 
-    public function __construct(array $attributes = [])
-    {
-        $this->setRawAttributes([
-            'code' => Str::random(8),
-        ], true);
-        parent::__construct($attributes);
-    }
+    // public function __construct(array $attributes = [])
+    // {
+    //     $this->setRawAttributes([
+    //         'code' => Str::random(8),
+    //     ], true);
+    //     parent::__construct($attributes);
+    // }
 
     protected function scopeActive(mixed $query)
     {
@@ -91,5 +91,14 @@ class Category extends Model
     protected function productsCount(): \Illuminate\Database\Eloquent\Casts\Attribute
     {
         return \Illuminate\Database\Eloquent\Casts\Attribute::make(get: fn() => $this->products()->count());
+    }
+
+    protected static function booted ()
+    {
+        static::creating(function($model) {
+            if(empty($model->code)){
+                $model->code = Str::random(8);
+            }
+        });
     }
 }

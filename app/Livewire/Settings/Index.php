@@ -7,6 +7,7 @@ namespace App\Livewire\Settings;
 use App\Livewire\Forms\SettingForm;
 use App\Livewire\Utils\WithModels;
 use App\Models\Setting;
+use App\Models\Warehouse;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
@@ -33,6 +34,7 @@ class Index extends Component
     public ?array $analyticsControl = null;
 
     public array $colors = ['blue', 'orange', 'green', 'indigo', 'teal', 'cyan', 'yellow', 'purple', 'red'];
+    public $warehouses;
 
     public ?array $invoice_control = null;
 
@@ -70,7 +72,8 @@ class Index extends Component
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-        return view('livewire.settings.index');
+        $this->warehouses = Warehouse::query()->get();
+        return view('livewire.settings.index', ['warehouses' => $this->warehouses]);
     }
 
     public function save(): void
@@ -114,7 +117,7 @@ class Index extends Component
     public function mount(): void
     {
         abort_if(Gate::denies('setting_access'), 403);
-
+        
         $this->settings = Setting::query()->firstOrFail();
         $this->form->setSetting($this->settings);
 

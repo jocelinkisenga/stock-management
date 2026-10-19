@@ -233,7 +233,8 @@
 
         <livewire:categories.import />
         <livewire:categories.create />
+        @if ($category != null)
         <livewire:categories.edit :category="$category" />
-
+        @endif
     </x-page-container>
 </div>

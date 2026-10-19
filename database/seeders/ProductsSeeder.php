@@ -25,7 +25,7 @@ class ProductsSeeder extends Seeder
         if ($warehouses->isEmpty()) {
             $warehouses = collect([
                 Warehouse::query()->firstOrCreate(['email' => 'warehouse@example.com'], [
-                    'name' => 'Main Warehouse',
+                    'name' => 'Jambo mart',
                     'city' => 'Default City',
                     'address' => '123 Main Street',
                     'phone' => '+1234567890',

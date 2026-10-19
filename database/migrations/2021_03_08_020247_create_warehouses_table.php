@@ -18,7 +18,7 @@ return new class extends Migration
             $blueprint->string('name', 192);
             $blueprint->string('city', 192)->nullable();
             $blueprint->text('address')->nullable();
-            $blueprint->string('phone', 192)->nullable();
+            $blueprint->string('phone')->nullable();
             $blueprint->string('email', 192)->nullable();
             $blueprint->string('country', 192)->nullable();
             $blueprint->boolean('status')->default(true);
