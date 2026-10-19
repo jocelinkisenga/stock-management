@@ -7,6 +7,7 @@ namespace App\Observers;
 use App\Models\Sale;
 use App\Models\Setting;
 use App\Notifications\SaleNotification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class SaleObserver
@@ -18,14 +19,17 @@ class SaleObserver
         $activeChannels = $triggers['sale_created'] ?? [];
 
         if ($sale->customer) {
-            if (in_array('mail', $activeChannels) && ! empty($sale->customer->email)) {
-                Notification::route('mail', $sale->customer->email)
-                    ->notify(new SaleNotification($sale, 'mail'));
-            }
+            // if (in_array('mail', $activeChannels) && ! empty($sale->customer->email)) {
+            //     Notification::route('mail', $sale->customer->email)
+            //         ->notify(new SaleNotification($sale, 'mail'));
+            // }
 
             if (in_array('whatsapp', $activeChannels) && ! empty($sale->customer->phone)) {
-                Notification::route('whatsapp', $sale->customer->phone)
-                    ->notify(new SaleNotification($sale, 'whatsapp'));
+                // Notification::route('whatsapp', $sale->customer->phone)
+                //     ->notify(new SaleNotification($sale, 'whatsapp'));
+
+                Log::info('sent successifully', ["to" => "okay", 'message' => "recu"]);
+
             }
         }
     }
