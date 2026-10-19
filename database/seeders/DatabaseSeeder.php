@@ -35,14 +35,14 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             SettingsSeeder::class,
             LanguagesSeeder::class,
-            // ExpenseSeeder::class,
-            // CategoriesSeeder::class,
-            // BrandSeeder::class,
-            // WarehouseSeeder::class,
-            // ProductsSeeder::class,
-            // CustomersSeeder::class,
-            // SupplierSeeder::class,
-            // SalesAndPurchasesSeeder::class,
+            ExpenseSeeder::class,
+            CategoriesSeeder::class,
+            BrandSeeder::class,
+            WarehouseSeeder::class,
+            ProductsSeeder::class,
+            CustomersSeeder::class,
+            SupplierSeeder::class,
+            SalesAndPurchasesSeeder::class,
         ]);
     }
 
