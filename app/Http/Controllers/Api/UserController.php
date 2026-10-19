@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -12,7 +13,6 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class UserController extends Controller
 {
@@ -59,7 +59,7 @@ class UserController extends Controller
         $user = User::query()->find($id);
 
         if ($user === null) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'User not found'], 404);
+            return new JsonResponse(['message' => 'User not found'], 404);
         }
 
         return new UserResource($user);
@@ -84,6 +84,6 @@ class UserController extends Controller
         $user = User::query()->findOrFail($id);
         $user->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'User deleted successfully']);
+        return new JsonResponse(['message' => 'User deleted successfully']);
     }
 }

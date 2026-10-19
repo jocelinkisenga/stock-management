@@ -17,9 +17,7 @@ class ProductTelegram extends Notification
      * @param mixed $productName
      * @param mixed $productPrice
      */
-    public function __construct(public $telegramChannel, public $productName, public $productPrice)
-    {
-    }
+    public function __construct(public $telegramChannel, public $productName, public $productPrice) {}
 
     /**
      * @param mixed $notifiable
@@ -34,7 +32,7 @@ class ProductTelegram extends Notification
     /**
      * @param mixed $notifiable
      */
-    public function toTelegram($notifiable): \NotificationChannels\Telegram\TelegramMessage
+    public function toTelegram($notifiable): TelegramMessage
     {
         return TelegramMessage::create()
             ->to($this->telegramChannel)

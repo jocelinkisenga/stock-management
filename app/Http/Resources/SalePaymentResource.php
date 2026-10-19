@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
 class SalePaymentResource extends JsonResource
 {
-    #[\Override]
+    #[Override]
     public function toArray($request)
     {
         return [

@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductAttribute extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $fillable = ['name', 'type', 'is_required'];
 
     public function products()

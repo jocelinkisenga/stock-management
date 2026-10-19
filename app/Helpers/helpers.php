@@ -142,10 +142,6 @@ if (! function_exists('make_reference_id')) {
     /**
      * Generate a sequential reference ID for a given model.
      * Extracts the trailing digits from the last created record safely using regex.
-     *
-     * @param string $prefix
-     * @param string $modelClass
-     * @return string
      */
     function make_reference_id(string $prefix, string $modelClass): string
     {
@@ -155,7 +151,7 @@ if (! function_exists('make_reference_id')) {
         if ($latest && $latest->reference) {
             // Extract trailing digits safely (e.g., SL-1000 -> 1000)
             if (preg_match('/(\d+)$/', (string) $latest->reference, $matches)) {
-                $number = (int)$matches[1] + 1;
+                $number = (int) $matches[1] + 1;
             }
         }
 
@@ -227,7 +223,6 @@ if (! function_exists('generate_color_palette')) {
     /**
      * Generate an array of hex colors from 50 to 950 using basic lightness adjustment.
      *
-     * @param string $hex
      * @return array<int, string>
      */
     function generate_color_palette(string $hex): array
@@ -250,16 +245,17 @@ if (! function_exists('generate_color_palette')) {
             $r = (int) round($color1[0] * $w + $color2[0] * (1 - $w));
             $g = (int) round($color1[1] * $w + $color2[1] * (1 - $w));
             $b = (int) round($color1[2] * $w + $color2[2] * (1 - $w));
-            return sprintf("#%02x%02x%02x", $r, $g, $b);
+
+            return sprintf('#%02x%02x%02x', $r, $g, $b);
         };
 
         return [
-            50  => $mix($baseRgb, $white, 10),
+            50 => $mix($baseRgb, $white, 10),
             100 => $mix($baseRgb, $white, 20),
             200 => $mix($baseRgb, $white, 40),
             300 => $mix($baseRgb, $white, 60),
             400 => $mix($baseRgb, $white, 80),
-            500 => sprintf("#%02x%02x%02x", $r, $g, $b),
+            500 => sprintf('#%02x%02x%02x', $r, $g, $b),
             600 => $mix($baseRgb, $black, 80),
             700 => $mix($baseRgb, $black, 60),
             800 => $mix($baseRgb, $black, 40),

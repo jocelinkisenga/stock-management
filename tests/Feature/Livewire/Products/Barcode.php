@@ -88,7 +88,7 @@ it('generates barcodes for the selected products', function (): void {
     // package, so bind a stub that returns one barcode entry per product — mirroring the
     // real action's shape (name, code, barcode SVG, price) — to verify the component
     // wiring (collect products -> invoke action -> store generated barcodes -> render).
-    app()->bind(GenerateBarcodesAction::class, static function (): \Closure {
+    app()->bind(GenerateBarcodesAction::class, static function (): Closure {
         return static function (array $products): array {
             return array_map(static fn (array $product): array => [
                 'code' => $product['code'],

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
 class SaleResource extends JsonResource
 {
@@ -13,7 +14,7 @@ class SaleResource extends JsonResource
      *
      * @param \Illuminate\Http\Request $request
      * */
-    #[\Override]
+    #[Override]
     public function toArray($request)
     {
         return [

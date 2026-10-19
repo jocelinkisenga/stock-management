@@ -28,7 +28,7 @@ class ExpenseService
 
     public function update(Expense $expense, array $data): Expense
     {
-        return DB::transaction(function () use ($expense, $data): \App\Models\Expense {
+        return DB::transaction(function () use ($expense, $data): Expense {
             if (isset($data['document']) && ! is_string($data['document'])) {
                 $data['document'] = $data['document']->store('expenses', 'public');
             } else {

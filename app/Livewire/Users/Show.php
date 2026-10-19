@@ -15,7 +15,6 @@ class Show extends Component
 
     public mixed $user;
 
-    /** @var bool */
     public bool $showModal = false;
 
     #[On('showModal')]

@@ -6,9 +6,7 @@ namespace App\Services;
 
 class CartItem
 {
-    public function __construct(protected array $data, protected string $rowId)
-    {
-    }
+    public function __construct(protected array $data, protected string $rowId) {}
 
     public function __get(string $name): mixed
     {
@@ -45,9 +43,7 @@ class CartItem
 
 class CartItemOptions
 {
-    public function __construct(protected array $data)
-    {
-    }
+    public function __construct(protected array $data) {}
 
     public function __get(string $name): mixed
     {

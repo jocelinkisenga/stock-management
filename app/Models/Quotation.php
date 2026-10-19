@@ -6,11 +6,13 @@ namespace App\Models;
 
 use App\Enums\QuotationStatus;
 use App\Support\HasAdvancedFilter;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int             $id
@@ -67,6 +69,7 @@ use Illuminate\Support\Carbon;
 class Quotation extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $casts = [
         'date' => 'date',
     ];
@@ -119,7 +122,7 @@ class Quotation extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -128,7 +131,7 @@ class Quotation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\QuotationDetails, $this>
+     * @return HasMany<QuotationDetails, $this>
      */
     public function quotationDetails(): HasMany
     {
@@ -136,7 +139,7 @@ class Quotation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Customer, $this>
+     * @return BelongsTo<Customer, $this>
      */
     public function customer(): BelongsTo
     {
@@ -149,11 +152,11 @@ class Quotation extends Model
     protected function date(): Attribute
     {
         return Attribute::make(
-            get: fn (\DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
+            get: fn (DateTimeInterface|\Carbon\WeekDay|\Carbon\Month|string|int|float|null $value): string => \Illuminate\Support\Facades\Date::parse($value)->format('d M, Y'),
         );
     }
 
-    #[\Override]
+    #[Override]
     protected static function boot(): void
     {
         parent::boot();

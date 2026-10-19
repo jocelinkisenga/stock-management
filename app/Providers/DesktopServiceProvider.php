@@ -15,15 +15,17 @@ use Illuminate\Support\ServiceProvider;
 use Native\Desktop\Facades\Window;
 use Native\Laravel\Facades\Menu;
 use Native\Laravel\Menu\Menu as NativeMenu;
+use Override;
+use Throwable;
 
 class DesktopServiceProvider extends ServiceProvider
 {
     /** Register services. */
-    #[\Override]
+    #[Override]
     public function register(): void
     {
         // Register desktop error handler as singleton
-        $this->app->singleton(fn($app): \App\Native\Services\DesktopErrorHandler => new DesktopErrorHandler);
+        $this->app->singleton(fn ($app): DesktopErrorHandler => new DesktopErrorHandler);
     }
 
     /** Bootstrap services. */
@@ -39,7 +41,7 @@ class DesktopServiceProvider extends ServiceProvider
         if (EnvironmentService::isDesktop() && ! app()->runningInConsole() && ! app()->runningUnitTests()) {
             try {
                 $this->configureDesktopEvents();
-                
+
                 if (class_exists(Menu::class)) {
                     Menu::new()
                         ->appMenu()
@@ -111,7 +113,7 @@ class DesktopServiceProvider extends ServiceProvider
         );
 
         // Reload window to apply database connection change
-        if (class_exists(\Native\Desktop\Facades\Window::class)) {
+        if (class_exists(Window::class)) {
             try {
                 // Short delay to allow notification to show
                 \Illuminate\Support\Sleep::sleep(1);
@@ -188,7 +190,7 @@ class DesktopServiceProvider extends ServiceProvider
         });
 
         // Register exception handler
-        set_exception_handler(function (\Throwable $throwable): void {
+        set_exception_handler(function (Throwable $throwable): void {
             $desktopErrorHandler = resolve(DesktopErrorHandler::class);
             $desktopErrorHandler->handleException($throwable);
 

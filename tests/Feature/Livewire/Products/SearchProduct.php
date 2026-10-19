@@ -95,7 +95,7 @@ it('filters products by the search query on render', function (): void {
 
     expect($ids)->toContain($this->product->id)
         ->and($ids)->toContain($this->product->id)
-        ->and($ids)->not->toContain(\App\Models\Product::where('code', 'OTHER001')->first()->id);
+        ->and($ids)->not->toContain(Product::where('code', 'OTHER001')->first()->id);
 });
 
 it('filters products by category on render', function (): void {

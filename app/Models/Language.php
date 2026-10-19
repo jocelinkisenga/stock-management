@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\Status;
 use Illuminate\Database\Eloquent\Model;
+use Override;
 
 /**
  * @property int                             $id
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
 class Language extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     public const IS_DEFAULT = 1;
 
     public const IS_NOT_DEFAULT = 0;
@@ -69,7 +71,7 @@ class Language extends Model
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [

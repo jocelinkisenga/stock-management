@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -12,7 +13,6 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Api\Concerns\SafeApiQuery;
 
 class ProductController extends Controller
 {
@@ -69,7 +69,7 @@ class ProductController extends Controller
         $product = Product::query()->find($id);
 
         if (is_null($product)) {
-            return new \Illuminate\Http\JsonResponse(['message' => 'Product not found'], 404);
+            return new JsonResponse(['message' => 'Product not found'], 404);
         }
 
         return new ProductResource($product);
@@ -94,6 +94,6 @@ class ProductController extends Controller
         $product = Product::query()->findOrFail($id);
         $product->delete();
 
-        return new \Illuminate\Http\JsonResponse(['message' => 'Product deleted successfully']);
+        return new JsonResponse(['message' => 'Product deleted successfully']);
     }
 }

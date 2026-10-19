@@ -148,7 +148,7 @@ class Product extends Model
         'tax_amount',
         'tax_type',
         'note',
-        'slug'
+        'slug',
     ];
 
     /**

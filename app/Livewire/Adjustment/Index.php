@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Adjustment;
 
-use Livewire\Attributes\Title;
-
 use App\Livewire\Utils\Datatable;
 use App\Models\Adjustment;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -29,7 +28,6 @@ class Index extends Component
         return view('livewire.placeholders.skeleton');
     }
 
-    /** @var mixed */
     public mixed $adjustment;
 
     public string $model = Adjustment::class;

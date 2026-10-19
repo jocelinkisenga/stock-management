@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Override;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CartStorage newModelQuery()
@@ -17,9 +18,10 @@ class CartStorage extends Model
 {
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use \Illuminate\Database\Eloquent\Factories\HasFactory;
+
     protected $fillable = ['session_key', 'cart_data'];
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [

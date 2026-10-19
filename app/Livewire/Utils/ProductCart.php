@@ -106,13 +106,13 @@ class ProductCart extends Component
             'id' => $product->id,
             'name' => $product->name,
             'quantity' => 1,
-            'price' => $productWarehouse instanceof \App\Models\ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0.00),
+            'price' => $productWarehouse instanceof ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0.00),
             'attributes' => array_merge($calculation, [
                 'product_discount' => 0.00,
                 'product_discount_type' => 'fixed',
                 'code' => $product->code,
                 'image' => $product->image,
-                'stock' => $productWarehouse instanceof \App\Models\ProductWarehouse ? $productWarehouse->qty : 0,
+                'stock' => $productWarehouse instanceof ProductWarehouse ? $productWarehouse->qty : 0,
                 'unit' => $product->unit,
                 'weight' => 1,
             ]),
@@ -121,7 +121,7 @@ class ProductCart extends Component
 
     private function calculatePrices(Product $product, ?ProductWarehouse $productWarehouse): array
     {
-        $price = $productWarehouse instanceof \App\Models\ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0.00);
+        $price = $productWarehouse instanceof ProductWarehouse ? $productWarehouse->price : ($product->price ?? 0.00);
         $unit_price = $price;
         $product_tax = 0.00;
         $sub_total = $price;

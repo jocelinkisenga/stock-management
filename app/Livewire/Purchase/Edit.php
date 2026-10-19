@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
-use Livewire\Attributes\Title;
-
 use App\Enums\PurchaseStatus;
 use App\Livewire\Forms\PurchaseForm;
 use App\Livewire\Utils\WithModels;
@@ -16,6 +14,7 @@ use App\Traits\LivewireCartTrait;
 use App\Traits\WithAlert;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('layouts.app')]

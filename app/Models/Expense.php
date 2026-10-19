@@ -8,6 +8,7 @@ use App\Support\HasAdvancedFilter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property int                             $id
@@ -56,9 +57,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Expense extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     use HasAdvancedFilter;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
 
     protected const ATTRIBUTES = [
         'id',
@@ -94,7 +95,7 @@ class Expense extends Model
         'document',
     ];
 
-    #[\Override]
+    #[Override]
     protected static function boot(): void
     {
         parent::boot();
@@ -106,7 +107,7 @@ class Expense extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\ExpenseCategory, $this>
+     * @return BelongsTo<ExpenseCategory, $this>
      */
     public function category(): BelongsTo
     {
@@ -117,7 +118,7 @@ class Expense extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -128,7 +129,7 @@ class Expense extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Warehouse, $this>
+     * @return BelongsTo<Warehouse, $this>
      */
     public function warehouse(): BelongsTo
     {
@@ -139,7 +140,7 @@ class Expense extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\CashRegister, $this>
+     * @return BelongsTo<CashRegister, $this>
      */
     public function cashRegister(): BelongsTo
     {
@@ -153,7 +154,8 @@ class Expense extends Model
             set: static fn ($value): int|float => $value * 100,
         );
     }
-    #[\Override]
+
+    #[Override]
     protected function casts(): array
     {
         return [

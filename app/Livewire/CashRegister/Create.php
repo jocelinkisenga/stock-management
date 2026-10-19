@@ -17,7 +17,6 @@ class Create extends Component
 {
     use WithAlert;
 
-    /** @var bool */
     public bool $createModal = false;
 
     public CashRegister $cashRegister;

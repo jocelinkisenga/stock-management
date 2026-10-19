@@ -11,8 +11,11 @@ use Illuminate\Support\Str;
 class GenerateApiController extends Command
 {
     public $controller;
+
     public $model;
+
     public $resource;
+
     /**
      * The name and signature of the console command.
      *

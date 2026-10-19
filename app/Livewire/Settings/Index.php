@@ -34,6 +34,7 @@ class Index extends Component
     public ?array $analyticsControl = null;
 
     public array $colors = ['blue', 'orange', 'green', 'indigo', 'teal', 'cyan', 'yellow', 'purple', 'red'];
+
     public $warehouses;
 
     public ?array $invoice_control = null;
@@ -73,6 +74,7 @@ class Index extends Component
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $this->warehouses = Warehouse::query()->get();
+
         return view('livewire.settings.index', ['warehouses' => $this->warehouses]);
     }
 
@@ -117,7 +119,7 @@ class Index extends Component
     public function mount(): void
     {
         abort_if(Gate::denies('setting_access'), 403);
-        
+
         $this->settings = Setting::query()->firstOrFail();
         $this->form->setSetting($this->settings);
 

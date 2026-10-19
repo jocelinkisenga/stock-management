@@ -82,7 +82,7 @@ class Supplier extends Model
         'id', 'name', 'email', 'phone', 'address', 'city', 'country', 'tax_number',
     ];
 
-    /** @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\Purchase, $this> */
+    /** @return HasOne<Purchase, $this> */
     public function purchases(): HasOne
     {
         return $this->hasOne(Purchase::class);
@@ -90,7 +90,7 @@ class Supplier extends Model
 
     protected function scopeSearchByName(mixed $query, mixed $name)
     {
-        return $query->when(filled($name), fn($query) => $query->where('name', 'like', '%' . $name . '%'));
+        return $query->when(filled($name), fn ($query) => $query->where('name', 'like', '%' . $name . '%'));
     }
 
     private function supplierSum(mixed $column, mixed $model)

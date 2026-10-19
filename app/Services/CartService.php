@@ -245,7 +245,7 @@ class CartService
     {
         return $this->getContent()->filter(
             // Filter out global settings (they are not arrays)
-            fn($item, $rowId) => is_array($item) && isset($item['id']))->map(fn($item, $rowId) => new CartItem($item, $rowId));
+            fn ($item, $rowId) => is_array($item) && isset($item['id']))->map(fn ($item, $rowId) => new CartItem($item, $rowId));
     }
 
     /** Get cart subtotal (alias for getSubTotal) */
@@ -307,7 +307,7 @@ class CartService
     {
         return $this->getContent()->filter(
             // Filter out global settings (they are not arrays)
-            fn($item, $rowId) => is_array($item) && isset($item['id']))->map(fn($item, $rowId) => new CartItem($item, $rowId))->filter($callback);
+            fn ($item, $rowId) => is_array($item) && isset($item['id']))->map(fn ($item, $rowId) => new CartItem($item, $rowId))->filter($callback);
     }
 
     /** Associate a model with cart items */

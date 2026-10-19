@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\ProductWarehouse;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class ProductService
@@ -18,7 +17,7 @@ class ProductService
 
         $imageName = null;
         if (isset($data['image']) && is_object($data['image']) && method_exists($data['image'], 'extension')) {
-            if (!method_exists($data['image'], 'isValid') || $data['image']->isValid()) {
+            if (! method_exists($data['image'], 'isValid') || $data['image']->isValid()) {
                 if ($data['image']->getRealPath()) {
                     $imageName = Str::slug($data['name']) . '-' . $data['image']->extension();
                     $data['image']->storeAs('products', $imageName, 'local_files');
@@ -31,7 +30,7 @@ class ProductService
             $gallery = [];
             foreach ($data['gallery'] as $value) {
                 if (is_object($value) && method_exists($value, 'extension')) {
-                    if (!method_exists($value, 'isValid') || $value->isValid()) {
+                    if (! method_exists($value, 'isValid') || $value->isValid()) {
                         if ($value->getRealPath()) {
                             $gName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $value->extension();
                             $value->storeAs('products', $gName, 'local_files');
@@ -111,7 +110,7 @@ class ProductService
 
         $imageName = $product->image;
         if (isset($data['image']) && is_object($data['image']) && method_exists($data['image'], 'extension')) {
-            if (!method_exists($data['image'], 'isValid') || $data['image']->isValid()) {
+            if (! method_exists($data['image'], 'isValid') || $data['image']->isValid()) {
                 if ($data['image']->getRealPath()) {
                     $imageName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $data['image']->extension();
                     $data['image']->storeAs('products', $imageName, 'local_files');
@@ -126,7 +125,7 @@ class ProductService
             $gallery = [];
             foreach ($data['gallery'] as $value) {
                 if (is_object($value) && method_exists($value, 'extension')) {
-                    if (!method_exists($value, 'isValid') || $value->isValid()) {
+                    if (! method_exists($value, 'isValid') || $value->isValid()) {
                         if ($value->getRealPath()) {
                             $gName = Str::slug($data['name']) . '-' . Str::random(5) . '.' . $value->extension();
                             $value->storeAs('products', $gName, 'local_files');

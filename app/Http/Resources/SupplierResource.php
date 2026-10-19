@@ -6,13 +6,14 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
 class SupplierResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      */
-    #[\Override]
+    #[Override]
     public function toArray(Request $request): array
     {
         return [

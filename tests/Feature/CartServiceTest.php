@@ -6,8 +6,8 @@ namespace Tests\Feature;
 
 use App\Services\CartService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class CartServiceTest extends TestCase
 {

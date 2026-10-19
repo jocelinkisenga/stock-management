@@ -60,6 +60,7 @@ class Warehouse extends Model
 {
     use HasAdvancedFilter;
     use HasFactory;
+
     protected const ATTRIBUTES = [
         'id',
         'name',
@@ -89,7 +90,7 @@ class Warehouse extends Model
         return $this->belongsToMany(User::class, 'user_warehouse', 'warehouse_id', 'user_id');
     }
 
-    /** @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Product, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
+    /** @return BelongsToMany<Product, $this, \Illuminate\Database\Eloquent\Relations\Pivot> */
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_warehouse', 'warehouse_id', 'product_id')

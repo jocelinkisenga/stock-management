@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Purchase;
 
-use Livewire\Attributes\Title;
-
 use App\Exports\PurchaseExport;
 use App\Livewire\Utils\Datatable;
 use App\Models\Purchase;
@@ -15,6 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 

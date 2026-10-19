@@ -15,9 +15,9 @@ use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
 use Tests\TestCase;
-use PHPUnit\Framework\Attributes\Test;
 
 class PosUxEnhancementTest extends TestCase
 {

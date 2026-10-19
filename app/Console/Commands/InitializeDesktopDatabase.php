@@ -30,8 +30,9 @@ class InitializeDesktopDatabase extends Command
         // Check if database already exists
         $dbPath = storage_path('database/desktop.sqlite');
 
-        if (file_exists($dbPath) && !$this->option('force') && ! $this->confirm('Desktop database already exists. Do you want to reinitialize it?')) {
+        if (file_exists($dbPath) && ! $this->option('force') && ! $this->confirm('Desktop database already exists. Do you want to reinitialize it?')) {
             $this->info('Database initialization cancelled.');
+
             return self::SUCCESS;
         }
 

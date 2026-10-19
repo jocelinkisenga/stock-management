@@ -6,6 +6,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
+use Override;
 
 class ProductWarehouseResource extends JsonResource
 {
@@ -20,7 +21,7 @@ class ProductWarehouseResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
      *                                                                        >>>>>>> Api
      */
-    #[\Override]
+    #[Override]
     public function toArray($request)
     {
         return [
