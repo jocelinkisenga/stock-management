@@ -28,7 +28,7 @@ class SaleObserver
                 // Notification::route('whatsapp', $sale->customer->phone)
                 //     ->notify(new SaleNotification($sale, 'whatsapp'));
 
-                Log::info('sent successifully', ["to" => "okay", 'message' => "recu"]);
+                Log::info('sent successifully', ['to' => 'okay', 'message' => 'recu']);
 
             }
         }
